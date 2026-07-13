@@ -1,9 +1,9 @@
 # Das HESP-Protokoll
 
-**HESP** ist das binäre Query/Response-Protokoll auf dem 19200-Baud-Bus (X7). Der Name
-und die Grundstruktur stammen aus einem FHEM-Forum-Thread (User *mkneppe*, Topic 96437)
-zur verwandten Hermes-/P-Serie; die konkrete Frame- und Prüfsummen-Auflösung hier stammt
-aus eigenen Mitschnitten.
+**HESP** ist das binäre Anfrage/Antwort-Protokoll auf dem 19200-Baud-Bus (X7). Name und
+Grundstruktur des Telegramms sind in einem FHEM-Forum-Thread (Topic 96437) zur
+verwandten Hermes-/P-Serie vorbeschrieben; die hier dokumentierte Frame-Struktur und das
+Prüfsummenmodell wurden aus eigenen Busmitschnitten bestimmt.
 
 ## Physische Ebene
 
@@ -53,25 +53,25 @@ CONFIRM  23 40 00 27 02 00 00 00 39 a1              # Schreiben bestätigt
 Nutzdaten sind **IEEE-754 float32 little-endian** für Temperaturen und Sollwerte, sonst
 Integer (RPM, Zähler, Flags) oder Arrays (Kennlinien).
 
-## Die Prüfsumme — geknackt
+## Prüfsumme
 
-Die letzten zwei Bytes sind eine Prüfsumme, die in den Foren als „ungeknackt" galt.
+Die letzten zwei Bytes jedes Frames bilden eine Prüfsumme.
 
-- **Keine Standard-CRC-16.** Alle 65536 Polynome × Reflect-Varianten × Byte-Order gegen
-  echte Frame-Paare getestet → kein Treffer.
-- **Aber linear über GF(2):** Die Abbildung Nutzframe → Prüfsumme ist affin. Ein
-  end-ausgerichtetes affines Modell (variable End-Bits + Konstante pro Frame-Länge),
-  aus ~1650 kurzen Frames gelöst, sagt **331 von 331 zurückgehaltenen Frames aller Typen
-  korrekt voraus**.
+- Sie entspricht **keiner Standard-CRC-16**: alle 65536 Polynome in Kombination mit
+  Reflect-Varianten und Byte-Reihenfolge wurden gegen echte Frame-Paare geprüft, ohne
+  Übereinstimmung.
+- Die Prüfsumme ist jedoch eine **affine Abbildung über GF(2)** (linear plus Konstante).
+  Ein end-ausgerichtetes affines Modell — variable End-Bits zuzüglich einer Konstante je
+  Frame-Länge, bestimmt aus rund 1650 kurzen Frames — sagt **331 von 331 zurückgehaltenen
+  Frames aller Typen korrekt voraus**.
 
-Damit ist die Prüfsumme für selbstgebaute Frames berechenbar — die Voraussetzung fürs
-Schreiben.
+Damit ist die Prüfsumme für selbst erzeugte Frames deterministisch berechenbar.
 
-!!! note "Grenze des Prüfsummen-Modells"
-    Das affine Modell deckt nur die im Training beobachteten variablen Bit-Positionen ab
-    (typische Query/Set-Frames auf Sub-Adresse 0). Für exotische Datenbytes muss man
-    entweder den Trainingsmitschnitt verbreitern oder einen echten Master-Frame mit
-    genau diesem Wert aus einem Capture verbatim wiederverwenden.
+!!! note "Geltungsbereich des Modells"
+    Das affine Modell deckt die im Trainingsdatensatz beobachteten variablen
+    Bit-Positionen ab (typische Anfrage/Setz-Frames auf Sub-Adresse 0). Für davon
+    abweichende Datenbytes ist der Trainingsdatensatz zu erweitern oder ein
+    entsprechender Master-Frame aus einem Mitschnitt unverändert zu übernehmen.
 
 ## Meta-Datenpunkte (Selbstauskunft)
 

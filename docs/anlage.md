@@ -40,10 +40,10 @@ Der STM32 auf dem PTC-Modul ist damit der **aktive Knoten zwischen der 9600er
 Panel-Seite und der 19200er HESP-Seite** — es gibt keinen anderen Pfad zwischen den
 beiden Domänen.
 
-!!! tip "Die entscheidende Erkenntnis"
-    Wer die Anlage steuern will, muss an **X7 / 19200 Baud** ansetzen, nicht am
-    9600er Panel-Bus. Der Panel-Bus lässt sich nicht bespielen (siehe
-    [Geschichte](geschichte.md)); X7 dagegen akzeptiert Schreibzugriffe.
+!!! note "Relevante Bus-Ebene"
+    Auslese- und Steuerzugriff erfolgen auf der Ebene **X7 / 19200 Baud** (HESP). Der
+    9600-Baud-Panel-Bus eignet sich dafür nicht (siehe
+    [Randbedingungen & offene Punkte](offene-punkte.md#der-9600-baud-panel-bus)).
 
 ## Anschluss X7
 
@@ -56,7 +56,7 @@ X7 ist ein 4-poliger Steckverbinder. Belegung (per Multimeter + Logic-Analyzer e
 | X7-3 | Data B− |
 | X7-4 | Data A+ |
 
-Ein handelsüblicher **USB-RS485-Adapter** (getestet: Waveshare USB-TO-RS485 mit
+Ein handelsüblicher **USB-RS485-Adapter** (in dieser Untersuchung ein Adapter mit
 SP485EEN-Transceiver, 19200 8N1) wird wie folgt angeklemmt:
 
 ```
@@ -65,9 +65,10 @@ Adapter B-  →  X7-3
 Adapter GND →  X7-1
 ```
 
-Die fest verbaute 120-Ω-Terminierung des Adapters stört die laufende Anlage
-nachweislich **nicht**. Der Bus lässt sich im laufenden Betrieb passiv mitlesen und
-aktiv bespielen, ohne die reguläre Kommunikation (STM32-Master ↔ LPC1758) zu stören.
+Eine fest verbaute 120-Ω-Terminierung des Adapters beeinflusste die laufende
+Kommunikation in dieser Untersuchung nicht. Der Bus konnte im laufenden Betrieb passiv
+mitgelesen und aktiv beschrieben werden, ohne die reguläre Kommunikation
+(STM32-Master ↔ LPC1758) zu stören.
 
 ## Was NICHT auf X7 liegt
 

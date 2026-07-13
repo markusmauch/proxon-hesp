@@ -6,8 +6,8 @@ kann bei anderen Ausbaustufen abweichen.
 
 ## Steuer-Datenpunkte (schreibbar)
 
-Per Panel-Perturbation eindeutig identifiziert — beim Ändern am Panel springt genau
-dieser DP:
+Durch gezielte Bedienung am Panel eindeutig identifiziert — bei Änderung der jeweiligen
+Größe am Panel ändert sich genau dieser Datenpunkt:
 
 | DP | Typ | Bedeutung | Werte |
 |---|---|---|---|
@@ -24,14 +24,16 @@ Betriebsart:  11 80 00 0a 02 00 00 04 <NN> 00 <crc16>
 Raumsoll:     11 80 00 27 02 00 00 08 <float32 LE> <crc16>
 ```
 
-!!! warning "Betriebsarten korrigieren gängige Fehlannahmen"
-    Die aus dem verwandten **WR3223** abgeleitete Betriebsart-Tabelle liegt hier falsch.
-    Am echten Bus gemessen gilt: **Aus=0, Eco-Sommer=1, Eco-Winter=2, Komfort=3, Ofen=4**.
+!!! note "Betriebsart-Kodierung"
+    Die Kodierung wurde direkt am Bus bestimmt: **Aus=0, Eco-Sommer=1, Eco-Winter=2,
+    Komfort=3, Ofen=4**. Sie weicht von der teils kolportierten, aus der verwandten
+    WR3223-Baureihe abgeleiteten Zuordnung ab.
 
 ## Temperaturfühler
 
-Zehn physische Kanäle. Die Namen sind die **offiziellen T-Nummern** aus dem BDE-Menü
-„Aktuelle Messwerte", per Foto-Abgleich mit gefrorenen Bus-Werten zugeordnet.
+Zehn physische Kanäle. Die Namen entsprechen den **T-Nummern** aus dem Panel-Menü
+„Aktuelle Messwerte" und wurden durch Abgleich zeitgleicher Buswerte mit der
+Panelanzeige zugeordnet.
 
 | DP | Fühler |
 |---|---|
@@ -65,15 +67,21 @@ Zehn physische Kanäle. Die Namen sind die **offiziellen T-Nummern** aus dem BDE
 | `0x0066` | **Bitfeld „DigitalOut"** — Schaltzustände (Bypass, PTC, Magnetventile, EWT) |
 | `0x0130` | Fehlertext (Klartext) |
 | `0x00d2` / `0x00d3` | Lüfterstufen-→-Prozent-Kennlinien |
-| `0x0233`–`0x023e` | Fachmann-Parameterblock (Winter/Wärmepumpe), PIN-geschützt schreibbar |
+| `0x0233`–`0x023e` | Parameterblock (Winter/Wärmepumpe), nur auf oberster Zugriffsebene schreibbar |
 
-## Sicherheitscheckliste vor jedem Schreibzugriff
+## Beobachtete Randbedingungen beim Schreiben
 
-1. Frame-Format inkl. Prüfsumme des Kanals kennen.
-2. Nur **bekannte, reversible** Kommandos senden.
-3. **Zyklisch senden** — der STM32-Master re-asserted den Panel-Zustand etwa alle 5 s;
-   ein einzelner SET wird sonst wieder überschrieben. Zum dauerhaften Halten in kürzeren
-   Intervallen (≈1,5 s) nachsetzen.
-4. Wirkung an einem unabhängigen Signal verifizieren (z. B. Ist-Drehzahl `0x00c9`).
-5. Die Anlage hat ein **Fail-Safe**: fällt der Master weg, lüftet sie weiter — sie steht
-   nie still.
+Die folgenden Punkte sind Beobachtungen aus der Untersuchung, keine Handlungsanweisung.
+Sie beschreiben das Verhalten des Busses, das eine schreibende Implementierung
+berücksichtigen muss:
+
+- **Vollständiges Frame inklusive Prüfsumme** ist erforderlich; das Prüfsummenmodell ist
+  auf der [Protokoll-Seite](protokoll.md#prufsumme) beschrieben.
+- **Zyklische Wiederholung:** Der STM32-Master überträgt den Panel-Zustand etwa alle
+  5 Sekunden erneut. Ein einzelner Setz-Frame wird dadurch wieder überschrieben; ein
+  dauerhaft gehaltener Zustand erfordert Wiederholung in kürzerem Intervall (in dieser
+  Untersuchung ≈ 1,5 s wirksam).
+- **Unabhängige Wirkungskontrolle:** Der Effekt eines Setz-Frames lässt sich an einer
+  davon unabhängigen Größe beobachten, etwa der Ist-Drehzahl `0x00c9`.
+- **Fail-Safe-Verhalten:** Fällt der Master aus, lüftet die Anlage in einem
+  Rückfallzustand weiter; sie kommt nicht zum Stillstand.

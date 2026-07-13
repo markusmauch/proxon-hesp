@@ -1,8 +1,8 @@
-site_name: Proxon P-Serie · HESP-Bus (inoffizielle Doku)
+site_name: Proxon P-Serie · HESP-Bus (technische Dokumentation)
 site_description: >-
-  Reverse-Engineering-Dokumentation des internen RS485-Busses (HESP) der
-  Zimmermann PROXON P-Serie Lüftungsheizung — Protokoll, Datenpunkte,
-  Home-Assistant-Integration.
+  Technische Dokumentation des internen RS485-Busses (HESP) der Zimmermann
+  PROXON P-Serie Lüftungsheizung — physische Schnittstelle, Protokoll und
+  Datenpunkte als Grundlage für eigene Implementierungen.
 site_url: https://markusmauch.github.io/proxon-hesp/
 repo_url: https://github.com/markusmauch/proxon-hesp
 repo_name: markusmauch/proxon-hesp
@@ -51,10 +51,8 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
 
 nav:
-  - Überblick: index.md
+  - Einführung: index.md
   - Anlage & Architektur: anlage.md
   - HESP-Protokoll: protokoll.md
   - Datenpunkt-Referenz: dp-referenz.md
-  - Betrieb mit Home Assistant: betrieb.md
-  - Reverse-Engineering-Geschichte: geschichte.md
-  - Offene Fragen & FAQ: faq.md
+  - Randbedingungen & offene Punkte: offene-punkte.md

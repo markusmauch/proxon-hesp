@@ -1,48 +1,49 @@
 # PROXON P-Serie · Der interne HESP-Bus
 
-!!! abstract "Was das hier ist"
-    Eine **inoffizielle, durch Reverse-Engineering entstandene** Dokumentation des
-    internen RS485-Kommunikationsbusses der **Zimmermann PROXON P-Serie** (Modell
-    P 2H-L, Kreuzgegenstrom-WRG mit Luft-Luft-Wärmepumpe). Der Bus trägt intern den
-    Namen **HESP**. Ziel: die Anlage **lokal und ohne Cloud/Gateway** aus Home Assistant
-    lesen und steuern.
+## Gegenstand
 
-    Es gibt praktisch keine öffentliche Information über diesen Bus. Diese Seiten sollen
-    das ändern — für andere Besitzer der P-Serie (und der eng verwandten Hermes-/
-    WR3223-Geräte).
+Diese Dokumentation beschreibt den internen RS485-Kommunikationsbus der **Zimmermann
+PROXON P-Serie** (untersucht am Modell P 2H-L, Kreuzgegenstrom-Wärmerückgewinnung mit
+Luft-Luft-Wärmepumpe). Der Bus trägt intern die Bezeichnung **HESP**.
 
-## In einem Absatz
+Ziel der Dokumentation ist es, die physische Schnittstelle, das Telegrammformat und die
+Datenpunkte so vollständig zu beschreiben, dass darauf eine **eigene lokale
+Auslese- und Steuerimplementierung** aufgebaut werden kann — unabhängig von der
+Plattform und ohne herstellerseitiges Gateway. Die Dokumentation ist bewusst
+**implementierungsneutral**: sie beschreibt die Schnittstelle, nicht eine bestimmte Anwendung.
 
-Die P-Serie wird normalerweise über ein aufgeklebtes TFT-Bedienpanel („BDE Comfort")
-gesteuert. Intern hängt an einem Steckverbinder namens **X7** ein zweiter RS485-Bus mit
-**19200 Baud 8N1**, auf dem ein NXP-LPC1758-Controller alle Sensorwerte, Lüfterstufen,
-Betriebsarten und Sollwerte als typisierte **Datenpunkte** bereitstellt. Das Protokoll
-ist ein binäres Query/Response-Format mit einer nicht-standardisierten, aber
-**vollständig geknackten** 16-Bit-Prüfsumme. Über einen simplen USB-RS485-Adapter an X7
-lässt sich **lesen und schreiben** — Lüfterstufe und Betriebsart wurden erfolgreich
-gesetzt und der physische Effekt (Lüfterdrehzahl) verifiziert.
+## Systemüberblick
+
+Die P-Serie wird über ein aufgeklebtes TFT-Bedienpanel bedient, das sich in seinen
+Systeminformationen als „BDE Comfort" ausweist. Intern kommunizieren zwei Platinen über
+den Steckverbinder **X7** mit **19200 Baud, 8N1**. Auf diesem Bus stellt ein
+NXP-LPC1758-Controller sämtliche Sensorwerte, Lüfterstufen, Betriebsarten und Sollwerte
+als typisierte **Datenpunkte** bereit.
 
 ```mermaid
 flowchart LR
     BDE["TFT-Panel<br/>(BDE Comfort)"] -->|9600 8N1<br/>Cat7| PTC["PTC-Modul<br/>STM32<br/>(X2 ⟷ X7)"]
     PTC -->|19200 8N1<br/>HESP| LPC["Hauptplatine<br/>LPC1758"]
-    STICK["USB-RS485<br/>(unser Tap)"] -.->|liest & schreibt| PTC
     LPC --- SENS["Sensoren · Lüfter ·<br/>Wärmepumpe · Ventile"]
 ```
 
-## Der Status heute
+## Stand der Untersuchung
 
-| Fähigkeit | Stand |
+| Aspekt | Stand |
 |---|---|
-| **Lesen** aller Sensoren/Zustände über X7 | ✅ vollständig gelöst, live |
-| **Schreiben** (Lüfterstufe, Betriebsart, Raumsoll) | ✅ bewiesen, physisch verifiziert |
-| Prüfsumme (die „ungeknackte CRC" aus den Foren) | ✅ als affines GF(2)-Modell gelöst |
-| Home-Assistant-Integration | ✅ Daemon publisht per MQTT-Discovery |
-| Steuerung über den 9600er Panel-Bus | ❌ Sackgasse (siehe [Geschichte](geschichte.md)) |
+| Physische Schnittstelle X7 (Pinbelegung, Pegel) | bestimmt |
+| Telegrammformat (Header, Typen, Längen, Datentypen) | bestimmt |
+| Prüfsumme | als affine Abbildung über GF(2) vollständig modelliert |
+| Lesen der Datenpunkte über X7 | reproduzierbar |
+| Schreiben von Steuer-Datenpunkten über X7 | nachgewiesen, physischer Effekt bestätigt |
+| Vollständige Zuordnung aller Temperaturfühler | bis auf ein Fühlerpaar abgeschlossen |
 
-!!! warning "Haftungsausschluss"
-    Alles hier beschriebene entstand an **einer** privaten Anlage, ohne Beteiligung von
-    Zimmermann. Eingriffe in den Bus können die Anlage stören und Garantie/Gewähr-
-    leistung berühren. Nachbau auf **eigenes Risiko**. Es werden keine geschützten
-    Hersteller-Unterlagen wiedergegeben — die offizielle Bedienungsanleitung gibt es
-    beim Hersteller.
+Die noch nicht abschließend geklärten Punkte sind unter
+[Randbedingungen & offene Punkte](offene-punkte.md) zusammengefasst.
+
+!!! note "Geltungsbereich"
+    Alle Angaben stammen aus Messungen an **einer** Anlage und wurden ohne Beteiligung
+    des Herstellers erhoben. Datenpunkt-Zuordnungen und Ausstattungsmerkmale (z. B.
+    Kühlfunktion, Bypass, Erdwärmetauscher) können bei anderen Ausbaustufen abweichen.
+    Eingriffe in den Bus erfolgen auf eigene Verantwortung und können Gewährleistung oder
+    Garantie berühren. Es werden keine geschützten Hersteller-Unterlagen wiedergegeben.

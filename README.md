@@ -1,19 +1,18 @@
-# PROXON P-Serie · HESP-Bus (inoffizielle Doku)
+# PROXON P-Serie · HESP-Bus (technische Dokumentation)
 
-Reverse-Engineering-Dokumentation des internen RS485-Busses (**HESP**, 19200 Baud) der
-Zimmermann **PROXON P-Serie** Lüftungsheizung: Protokoll, Datenpunkte und lokale
-Home-Assistant-Integration — ohne das kostenpflichtige Hersteller-Gateway.
+Technische Dokumentation des internen RS485-Busses (**HESP**, 19200 Baud) der Zimmermann
+**PROXON P-Serie** Lüftungsheizung: physische Schnittstelle, Telegrammformat und
+Datenpunkte als Grundlage für eigene lokale Auslese- und Steuerimplementierungen. Die
+Dokumentation ist bewusst implementierungsneutral.
 
 📖 **Website:** https://markusmauch.github.io/proxon-hesp/
 
 ## Inhalt
 
 - **Anlage & Architektur** — Zwei-Platinen-Aufbau, Anschluss X7
-- **HESP-Protokoll** — Frame-Format, Typ-Nibble, die geknackte Prüfsumme
-- **Datenpunkt-Referenz** — Steuer- und Sensor-DPs
-- **Betrieb mit Home Assistant** — Daemon, MQTT-Discovery, Fallstricke
-- **Geschichte** — warum der 9600er-Panel-Bus eine Sackgasse ist
-- **FAQ & offene Fragen**
+- **HESP-Protokoll** — Frame-Format, Telegrammtypen, Prüfsummenmodell
+- **Datenpunkt-Referenz** — Steuer- und Sensor-Datenpunkte
+- **Randbedingungen & offene Punkte** — Bus-Eigenschaften und noch nicht geklärte Fragen
 
 ## Lokal bauen
 
@@ -22,13 +21,14 @@ pip install mkdocs-material
 mkdocs serve
 ```
 
-## Mitmachen
+## Beiträge
 
-Eigene Messungen von P-Serie-/Hermes-/WR3223-Geräten (besonders DP-Zuordnungen anderer
-Ausbaustufen) sind als Issue oder PR willkommen.
+Messungen von weiteren Geräten der P-Serie sowie der verwandten Hermes-/WR3223-Baureihe
+(insbesondere Datenpunkt-Zuordnungen anderer Ausbaustufen) sind als Issue oder Pull
+Request willkommen.
 
-## Haftungsausschluss
+## Geltungsbereich
 
-Inoffiziell, entstanden an einer einzelnen privaten Anlage, ohne Beteiligung von
-Zimmermann. Nachbau auf eigenes Risiko; Eingriffe können Gewährleistung/Garantie
-berühren. Es werden keine geschützten Hersteller-Unterlagen wiedergegeben.
+Alle Angaben stammen aus Messungen an einer einzelnen Anlage, erhoben ohne Beteiligung
+des Herstellers. Nachbau auf eigene Verantwortung; Eingriffe können Gewährleistung oder
+Garantie berühren. Es werden keine geschützten Hersteller-Unterlagen wiedergegeben.
