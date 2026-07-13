@@ -7,6 +7,11 @@ site_url: https://markusmauch.github.io/proxon-hesp/
 repo_url: https://github.com/markusmauch/proxon-hesp
 repo_name: markusmauch/proxon-hesp
 edit_uri: edit/main/docs/
+copyright: >-
+  © 2026 Markus Mauch · Inhalte unter
+  <a href="https://creativecommons.org/licenses/by/4.0/deed.de" rel="license">CC&nbsp;BY&nbsp;4.0</a>
+  · Unabhängiges Projekt, nicht mit Zimmermann Lüftungs- und Wärmesysteme affiliiert;
+  „PROXON" und weitere genannte Marken gehören ihren jeweiligen Inhabern.
 
 theme:
   name: material

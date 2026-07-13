@@ -32,3 +32,10 @@ Request willkommen.
 Alle Angaben stammen aus Messungen an einer einzelnen Anlage, erhoben ohne Beteiligung
 des Herstellers. Nachbau auf eigene Verantwortung; Eingriffe können Gewährleistung oder
 Garantie berühren. Es werden keine geschützten Hersteller-Unterlagen wiedergegeben.
+
+## Lizenz & Marken
+
+Inhalte unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de) (siehe
+[`LICENSE`](LICENSE)). Unabhängiges Projekt, **nicht** mit Zimmermann Lüftungs- und
+Wärmesysteme GmbH & Co. KG affiliiert; „PROXON", „Zimmermann" und weitere genannte Namen
+sind Marken ihrer jeweiligen Inhaber und werden beschreibend verwendet.

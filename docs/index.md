@@ -52,3 +52,14 @@ Die noch nicht abschließend geklärten Punkte sind unter
     Kühlfunktion, Bypass, Erdwärmetauscher) können bei anderen Ausbaustufen abweichen.
     Eingriffe in den Bus erfolgen auf eigene Verantwortung und können Gewährleistung oder
     Garantie berühren. Es werden keine geschützten Hersteller-Unterlagen wiedergegeben.
+
+## Lizenz & Marken
+
+Diese Dokumentation steht unter der Lizenz
+[Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/deed.de):
+Weiterverwendung und Bearbeitung sind erlaubt, sofern die Herkunft genannt wird. Kurze
+Protokoll- und Code-Beispiele dürfen darüber hinaus ohne Namensnennung verwendet werden.
+
+Dies ist ein **unabhängiges Projekt** und steht in keiner Verbindung zu Zimmermann
+Lüftungs- und Wärmesysteme GmbH & Co. KG. „PROXON", „Zimmermann" und weitere genannte
+Namen sind Marken ihrer jeweiligen Inhaber und werden ausschließlich beschreibend verwendet.
