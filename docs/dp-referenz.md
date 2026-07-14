@@ -60,12 +60,38 @@ Panelanzeige zugeordnet.
 | `0x00c9` | Ist-Drehzahl, 2× float32 `[Zuluft, Abluft]` |
 | `0x00d7` | Ziel-Drehzahl, 2× float32 `[Zuluft, Abluft]` |
 
-## Sonstige gelesene Datenpunkte
+## Status-Datenpunkte
 
 | DP | Bedeutung |
 |---|---|
-| `0x0066` | **Bitfeld „DigitalOut"** — Schaltzustände (Bypass, PTC, Magnetventile, EWT) |
+| `0x0160` | **Sommer-Bypass-Status**: 0 = geschlossen (Wärmerückgewinnung aktiv), 1 = Bypass aktiv |
+| `0x00ed` | **Filter-Restlaufzeit** in Tagen (u32) |
 | `0x0130` | Fehlertext (Klartext) |
+
+!!! note "Bestimmung des Bypass-Status"
+    `0x0160` wechselte in einer nächtlichen Langzeitmessung als einziger Datenpunkt
+    genau in dem Moment von 0 auf 1, in dem die Frischlufttemperatur abends unter die
+    Raumtemperatur fiel. Die Zulufttemperatur löste sich ab diesem Zeitpunkt messbar
+    von der Ablufttemperatur und näherte sich der Frischluft — die Klappenbewegung ist
+    damit an einer unabhängigen Größe nachgewiesen. Die Zwischenlage der Zuluft
+    (zwischen Voll-Wärmerückgewinnung und Voll-Bypass) passt zum **geregelten**
+    Sommerbypass. Zeitgleich wechselte `0x01f6` von `0x40` auf `0x20`
+    (Statuswort-Kandidat, Bedeutung offen).
+
+!!! note "Filter-Restlaufzeit"
+    `0x00ed` stimmte zum Messzeitpunkt exakt mit der Panel-Anzeige der
+    Filter-Restlaufzeit überein und war der einzige Datenpunkt mit diesem Wert im
+    gesamten Adressraum. Die abschließende Bestätigung (tägliches Dekrement) steht aus.
+
+## Zähler und weitere gelesene Datenpunkte
+
+| DP | Bedeutung |
+|---|---|
+| `0x02df` | **Betriebsstundenzähler-Array** (u32-Liste, 9 belegte Slots, Inkrement stündlich); Einzelwerte auch als `0x02d0`–`0x02d9` lesbar |
+| `0x0066` | Array aus 12 Flags (u32) — vermutlich Schaltausgänge; Zuordnung offen, der Bypass-Status meldet sich **nicht** hier, sondern in `0x0160` |
+| `0x0064` | Analog-Rohwerte der Fühlerkanäle (float32, mV; offene Kanäle liegen auf der 3,3-V-Referenz) |
+| `0x03e8` | Status-/Logtext des Controllers (z. B. „Writing parameters to NVRAM backup") |
+| `0x032e` | Betriebszeit seit Start (Sekunden) |
 | `0x00d2` / `0x00d3` | Lüfterstufen-→-Prozent-Kennlinien |
 | `0x0233`–`0x023e` | Parameterblock (Winter/Wärmepumpe), nur auf oberster Zugriffsebene schreibbar |
 
