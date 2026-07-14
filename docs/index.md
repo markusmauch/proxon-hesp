@@ -9,8 +9,13 @@ Luft-Luft-Wärmepumpe). Der Bus trägt intern die Bezeichnung **HESP**.
 Ziel der Dokumentation ist es, die physische Schnittstelle, das Telegrammformat und die
 Datenpunkte so vollständig zu beschreiben, dass darauf eine **eigene lokale
 Auslese- und Steuerimplementierung** aufgebaut werden kann — unabhängig von der
-Plattform und ohne herstellerseitiges Gateway. Die Dokumentation ist bewusst
-**implementierungsneutral**: sie beschreibt die Schnittstelle, nicht eine bestimmte Anwendung.
+Plattform. Ein herstellerseitiger Weg existiert hierfür nicht: Nach eigener Auskunft
+des Herstellers ist für die P-Serie eine Anbindung an die Gebäudeleittechnik **nicht
+vorgesehen und nicht nachrüstbar**. Die aus Forenbeiträgen bekannte „BusBridge" betrifft
+ausschließlich die FWT-Serie mit integriertem Datenbus (Produktionszeitraum 2012–2018)
+und ist auf die P-Serie nicht übertragbar. Die hier beschriebene Schnittstelle ist damit
+der einzige bekannte Zugang. Die Dokumentation ist bewusst **implementierungsneutral**:
+sie beschreibt die Schnittstelle, nicht eine bestimmte Anwendung.
 
 [:material-coffee: Diese Arbeit unterstützen](https://buymeacoffee.com/markusmauch){ .md-button .md-button--primary }
 
