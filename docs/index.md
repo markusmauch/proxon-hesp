@@ -24,7 +24,7 @@ weiterhilft, freue ich mich über einen Kaffee.
 
 ## Systemüberblick
 
-Die P-Serie wird über ein aufgeklebtes TFT-Bedienpanel bedient, das sich in seinen
+Die P-Serie wird über ein zentrales TFT-Bedienpanel bedient, das sich in seinen
 Systeminformationen als „BDE Comfort" ausweist. Intern kommunizieren zwei Platinen über
 den Steckverbinder **X7** mit **19200 Baud, 8N1**. Auf diesem Bus stellt ein
 NXP-LPC1758-Controller sämtliche Sensorwerte, Lüfterstufen, Betriebsarten und Sollwerte
