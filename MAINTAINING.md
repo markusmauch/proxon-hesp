@@ -49,6 +49,10 @@ Buy-Me-a-Coffee-Button und Favicon über Releases hinweg **unverändert** lassen
 ## Änderungs-Ablauf
 
 ```bash
+# 0. IMMER ZUERST: Remote-Stand holen — Markus editiert gelegentlich direkt auf
+#    GitHub (Web-Editor). Niemals force-pushen; bei Konflikt seine Version sichten
+#    und einarbeiten statt überschreiben.
+git pull --rebase origin main
 # 1. Inhalt in docs/ anpassen
 # 2. Schutzprüfung: keine internen Daten / kein wertendes Vokabular
 grep -rniE '192\.168|10\.32|hejira|/dev/serial|passwd|token|geknackt|knacken|durchbruch|sackgasse|angriff|injekt|hacker|\btap\b|hebel|bespielen' docs/ && echo 'PRUEFEN!' || echo 'sauber'
