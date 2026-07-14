@@ -17,11 +17,6 @@ und ist auf die P-Serie nicht übertragbar. Die hier beschriebene Schnittstelle 
 der einzige bekannte Zugang. Die Dokumentation ist bewusst **implementierungsneutral**:
 sie beschreibt die Schnittstelle, nicht eine bestimmte Anwendung.
 
-[:material-coffee: Diese Arbeit unterstützen](https://buymeacoffee.com/markusmauch){ .md-button .md-button--primary }
-
-Diese Dokumentation ist frei und entstand aus vielen Stunden Messarbeit. Wenn sie dir
-weiterhilft, freue ich mich über einen Kaffee.
-
 ## Systemüberblick
 
 Die P-Serie wird über ein zentrales TFT-Bedienpanel bedient, das sich in seinen
@@ -68,3 +63,8 @@ Protokoll- und Code-Beispiele dürfen darüber hinaus ohne Namensnennung verwend
 Dies ist ein **unabhängiges Projekt** und steht in keiner Verbindung zu Zimmermann
 Lüftungs- und Wärmesysteme GmbH & Co. KG. „PROXON", „Zimmermann" und weitere genannte
 Namen sind Marken ihrer jeweiligen Inhaber und werden ausschließlich beschreibend verwendet.
+
+[:material-coffee: Diese Arbeit unterstützen](https://buymeacoffee.com/markusmauch){ .md-button .md-button--primary }
+
+Diese Dokumentation ist frei und entstand aus vielen Stunden Messarbeit. Wenn sie dir
+weiterhilft, freue ich mich über einen Kaffee.
