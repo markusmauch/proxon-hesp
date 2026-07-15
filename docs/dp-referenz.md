@@ -37,21 +37,28 @@ Panelanzeige zugeordnet.
 
 | DP | Fühler |
 |---|---|
+| `0x0194` | T1 Zuluft |
 | `0x0231` | T3 Frischluft |
 | `0x0230` | T4 Fortluft |
 | `0x0190` | T5 vor Verdampfer |
 | `0x0191` | T6 Verdampfer |
 | `0x022e` | T7 Abluft |
 | `0x0192` | T8 nach Vorwärme |
+| `0x022d` | T10 Kondensator |
 | `0x0193` | T12 vor Kondensator |
 | `0x0195` | T13 Kompressor |
-| `0x0194` | T1 Zuluft **oder** T10 Kondensator |
-| `0x022d` | T10 Kondensator **oder** T1 Zuluft |
 
-!!! note "Das letzte Paar"
-    `0x0194` und `0x022d` sitzen beide im Zuluftpfad und messen ohne laufende
-    Wärmepumpe identisch. Sie lassen sich erst beim ersten WP-Lauf im Winter trennen
-    (der Kondensator wird dann heiß, die Zuluft nicht).
+!!! note "Trennung des Zuluftpfad-Paares `0x0194`/`0x022d`"
+    Beide Datenpunkte sitzen im Zuluftpfad und messen ohne laufende Wärmepumpe
+    identisch (konstanter Ruhe-Offset ~0,6 K). Die Zuordnung wurde in einem
+    kontrollierten Wärmepumpenlauf bestimmt (auch im Sommer auslösbar: Betriebsart
+    Komfort, Sollwert 5–6 K über Raumtemperatur; Verdichterstart hier nach unter
+    zwei Minuten). Beim Verdichterstart steigt `0x022d` früher und deutlich steiler
+    als `0x0194` (Fühler an der Wärmequelle führt) und hält nach dem Abschalten —
+    um den Ruhe-Offset korrigiert — länger Restwärme. Beides weist `0x022d` als
+    T10 Kondensator aus, `0x0194` entsprechend als T1 Zuluft. Referenzwerte des
+    Laufs: T13 Kompressor 21 → 74 °C, T4 Fortluft 22 → 6 °C, T6 Verdampfer
+    24 → 7 °C, Zuluftpfad-Paar 21 → 49 °C.
 
 ## Lüfter & Drehzahlen
 

@@ -40,9 +40,8 @@ Diese Punkte betreffen jede Implementierung, die das Bedienpanel ersetzt oder er
 
 | Thema | Stand |
 |---|---|
-| Fühlerpaar `0x0194` / `0x022d` (T1 Zuluft ↔ T10 Kondensator) | erst im Wärmepumpenbetrieb unterscheidbar |
 | Zuordnung der 12 Flags in `0x0066` (Schaltausgänge) | offen — der Bypass-Status liegt separat in `0x0160` |
-| Filter-Restlaufzeit `0x00ed` | identifiziert (Abgleich mit Panelanzeige); Bestätigung über tägliches Dekrement steht aus |
+| Filter-Restlaufzeit `0x00ed` | über tägliches Dekrement bestätigt; der Dekrement-Zeitpunkt liegt nicht bei Mitternacht — die Zeitführung (vermutlich im Bedienpanel) ist offen |
 | Benennung der einzelnen Betriebsstundenzähler in `0x02df` | erfordert Abgleich mit dem Panel-Systeminfo-Menü |
 | Statuswort `0x01f6` (wechselt synchron zum Bypass) | Bedeutung offen |
 | Rolle des STM32 (reine Frame-Brücke oder aggregierender Slave) | offen |
