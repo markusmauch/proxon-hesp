@@ -14,19 +14,6 @@ Dokumentation ist bewusst implementierungsneutral.
 - **Datenpunkt-Referenz** — Steuer- und Sensor-Datenpunkte
 - **Randbedingungen & offene Punkte** — Bus-Eigenschaften und noch nicht geklärte Fragen
 
-## Lokal bauen
-
-```bash
-pip install mkdocs-material
-mkdocs serve
-```
-
-## Beiträge
-
-Messungen von weiteren Geräten der P-Serie sowie der verwandten Hermes-/WR3223-Baureihe
-(insbesondere Datenpunkt-Zuordnungen anderer Ausbaustufen) sind als Issue oder Pull
-Request willkommen.
-
 ## Geltungsbereich
 
 Alle Angaben stammen aus Messungen an einer einzelnen Anlage, erhoben ohne Beteiligung
