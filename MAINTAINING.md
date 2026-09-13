@@ -64,4 +64,9 @@ grep -rniE '192\.168|10\.32|hejira|/dev/serial|passwd|token|geknackt|knacken|dur
 pip install mkdocs-material && mkdocs build --strict
 # 4. committen + auf main pushen -> GitHub Action baut & deployt
 # 5. Live prüfen: https://markusmauch.github.io/proxon-hesp/
+#    Geduld: der Lauf kann einige Minuten auf sich warten lassen (2026-09-13: gut 4 min,
+#    Tag erst nach ~5 min live). In dem Fenster liefert ein manueller `gh workflow run`
+#    HTTP 500 und die Run-Liste bleibt leer — das ist NICHT ein kaputtes Repo, also
+#    weder Actions-Einstellungen umstellen noch erneut pushen, sondern nachsehen mit:
+#    gh run list --limit 1
 ```
