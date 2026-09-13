@@ -46,6 +46,10 @@ Schnittstelle wird beschrieben, keine bestimmte Anwendung vorgeschrieben.
 
 Buy-Me-a-Coffee-Button und Favicon über Releases hinweg **unverändert** lassen.
 
+`overrides/main.html` (`theme.custom_dir`) enthält den Google-Site-Verification-Meta-Tag.
+Er beweist Google den Besitz der Property und muss auf **allen** Seiten stehen bleiben —
+Datei und `custom_dir`-Eintrag nicht entfernen, sonst verliert die Search Console den Zugriff.
+
 ## Änderungs-Ablauf
 
 ```bash
