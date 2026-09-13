@@ -15,6 +15,7 @@ copyright: >-
 
 theme:
   name: material
+  custom_dir: overrides
   language: de
   palette:
     - media: "(prefers-color-scheme: light)"
