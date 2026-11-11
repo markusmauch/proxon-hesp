@@ -50,6 +50,29 @@ Buy-Me-a-Coffee-Button und Favicon über Releases hinweg **unverändert** lassen
 Er beweist Google den Besitz der Property und muss auf **allen** Seiten stehen bleiben —
 Datei und `custom_dir`-Eintrag nicht entfernen, sonst verliert die Search Console den Zugriff.
 
+## Zweisprachigkeit (seit 2026-11-11)
+
+Die Seiten erscheinen deutsch unter `/` und englisch unter `/en/`. Technisch über
+`mkdocs-static-i18n` im **Suffix-Verfahren**: Zu jeder `docs/<name>.md` gehört eine
+`docs/<name>.en.md`. Deutsch ist die Quellsprache.
+
+- **Jede inhaltliche Änderung muss in beide Fassungen.** Eine Seite, die nur deutsch
+  aktualisiert wird, verbreitet den alten Stand unter `/en/` weiter — schlimmer als gar
+  keine Übersetzung.
+- **Hex-Tabellen und Zahlenwerte nicht abtippen**, sondern aus der deutschen Datei
+  übernehmen. Gegenprobe:
+  `python3 -c "import re;f=lambda p:re.findall(r'\`([0-9a-f]{4})\`',open(p).read());print(f('docs/protokoll.md')==f('docs/protokoll.en.md'))"`
+- **Verweise mit Anker** zeigen auf den deutschen Dateinamen (`protokoll.md#...`), das
+  Plugin löst die Sprache auf. Der **Anker** selbst muss aber der jeweiligen Sprache
+  folgen (`#prufsumme` ↔ `#checksum`) — sonst zeigt der Link ins Leere, ohne dass der
+  strikte Build das merkt.
+- **Vokabelprüfung auch englisch** fahren (siehe Ablauf unten).
+- `theme.features: navigation.instant` ist **bewusst entfernt**: Es ist mit dem
+  Sprachumschalter unvereinbar und ließ `mkdocs build --strict` abbrechen. Nicht
+  zurücknehmen, ohne den Umschalter zu prüfen.
+- Die Action installiert `mkdocs-material` **und** `mkdocs-static-i18n` — bei einem neuen
+  Plugin die pip-Zeile im Workflow mitziehen.
+
 ## Änderungs-Ablauf
 
 ```bash
@@ -60,6 +83,7 @@ git pull --rebase origin main
 # 1. Inhalt in docs/ anpassen
 # 2. Schutzprüfung: keine internen Daten / kein wertendes Vokabular
 grep -rniE '192\.168|10\.32|hejira|/dev/serial|passwd|token|geknackt|knacken|durchbruch|sackgasse|angriff|injekt|hacker|\btap\b|hebel|bespielen' docs/ && echo 'PRUEFEN!' || echo 'sauber'
+grep -rniE '\bcrack|breakthrough|dead end|\battack|\binject|\bhack|\btap\b|leverage|exploit' docs/*.en.md && echo 'PRUEFEN!' || echo 'sauber'
 # 3. Strikt bauen
 pip install mkdocs-material && mkdocs build --strict
 # 4. committen + auf main pushen -> GitHub Action baut & deployt

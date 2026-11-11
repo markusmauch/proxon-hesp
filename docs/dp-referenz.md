@@ -88,7 +88,8 @@ Panelanzeige zugeordnet.
 !!! note "Filter-Restlaufzeit"
     `0x00ed` stimmte zum Messzeitpunkt exakt mit der Panel-Anzeige der
     Filter-Restlaufzeit überein und war der einzige Datenpunkt mit diesem Wert im
-    gesamten Adressraum. Die abschließende Bestätigung (tägliches Dekrement) steht aus.
+    gesamten Adressraum. Das tägliche Dekrement ist bestätigt; offen ist allein der
+    Zeitpunkt, zu dem es erfolgt (nicht Mitternacht).
 
 ## Zähler und weitere gelesene Datenpunkte
 

@@ -64,7 +64,7 @@ Dies ist ein **unabhängiges Projekt** und steht in keiner Verbindung zu Zimmerm
 Lüftungs- und Wärmesysteme GmbH & Co. KG. „PROXON", „Zimmermann" und weitere genannte
 Namen sind Marken ihrer jeweiligen Inhaber und werden ausschließlich beschreibend verwendet.
 
-## Suspport
+## Support
 
 [:material-coffee: Diese Arbeit unterstützen](https://buymeacoffee.com/markusmauch){ .md-button .md-button--primary }
 
