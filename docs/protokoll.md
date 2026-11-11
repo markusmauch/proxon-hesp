@@ -185,12 +185,18 @@ Der Bus beschreibt sich teilweise selbst:
 
 | DP | Inhalt |
 |---|---|
-| `0x0001` | Klartextname des Nodes (z. B. Node `0x41` = „PTC-Modul") |
+| `0x0001` | Klartextname des Nodes (z. B. Knoten 30 = „PTC-Modul") |
 | `0x0033` | Liste aller Parameter-DP-Nummern (Verzeichnis) |
 | `0x0034` | parallele Typcode-Liste dazu |
 | `0x0038` | **Zugriffslevel-Maske** je DP (siehe unten) |
 | `0x0039` | Einheiten-Code je DP (8=°C, 5=Sekunden, 11=String …) |
 | `0x0130` | Fehlerstatus als Klartext („Kein Fehler") |
+
+!!! note "Knotennummern"
+    Die Knotennummer ist dem Adresskopf zu entnehmen (siehe oben), nicht einem
+    einzelnen Kopf-Byte: Die Antworten des PTC-Moduls beginnen mit `e2 41 00`, was
+    nach der 24-bit-Zerlegung *RESPONSE von Knoten 30 an Knoten 1* bedeutet. Eine
+    frühere Fassung dieser Seite las das mittlere Byte als Knoten-ID („Node `0x41`“).
 
 ### Zugriffsmaske `0x0038`
 

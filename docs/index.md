@@ -38,7 +38,7 @@ flowchart LR
 |---|---|
 | Physische Schnittstelle X7 (Pinbelegung, Pegel) | bestimmt |
 | Telegrammformat (Header, Typen, Längen, Datentypen) | bestimmt |
-| Prüfsumme | als affine Abbildung über GF(2) vollständig modelliert |
+| Prüfsumme | als CRC-16 bestimmt (Polynom, Startwert, Schiebeschritte) |
 | Lesen der Datenpunkte über X7 | reproduzierbar |
 | Schreiben von Steuer-Datenpunkten über X7 | nachgewiesen, physischer Effekt bestätigt |
 | Vollständige Zuordnung aller Temperaturfühler | bis auf ein Fühlerpaar abgeschlossen |
