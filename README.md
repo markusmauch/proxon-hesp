@@ -1,31 +1,31 @@
-# PROXON P-Serie · HESP-Bus (technische Dokumentation)
+# PROXON P series · HESP bus (technical documentation)
 
-***Deutsch** · [English](README.en.md)*
+***English** · [Deutsch](README.de.md)*
 
-Technische Dokumentation des internen RS485-Busses (**HESP**, 19200 Baud) der Zimmermann
-**PROXON P-Serie** Lüftungsheizung: physische Schnittstelle, Telegrammformat und
-Datenpunkte als Grundlage für eigene lokale Auslese- und Steuerimplementierungen. Die
-Dokumentation ist bewusst implementierungsneutral.
+Technical documentation of the internal RS485 bus (**HESP**, 19200 baud) of the Zimmermann
+**PROXON P series** ventilation heating unit: physical interface, telegram format and data
+points as a basis for independent local read and control implementations. The
+documentation is deliberately implementation-neutral.
 
-📖 **Website:** https://markusmauch.github.io/proxon-hesp/
-(English: https://markusmauch.github.io/proxon-hesp/en/)
+📖 **Website:** https://markusmauch.github.io/proxon-hesp/en/
+(German: https://markusmauch.github.io/proxon-hesp/)
 
-## Inhalt
+## Contents
 
-- **Anlage & Architektur** — Zwei-Platinen-Aufbau, Anschluss X7
-- **HESP-Protokoll** — Frame-Format, Telegrammtypen, Prüfsumme
-- **Datenpunkt-Referenz** — Steuer- und Sensor-Datenpunkte
-- **Randbedingungen & offene Punkte** — Bus-Eigenschaften und noch nicht geklärte Fragen
+- **Unit & architecture** — two-board design, connector X7
+- **HESP protocol** — frame format, telegram types, checksum
+- **Data point reference** — control and sensor data points
+- **Constraints & open points** — bus properties and questions not yet settled
 
-## Geltungsbereich
+## Applicability
 
-Alle Angaben stammen aus Messungen an einer einzelnen Anlage, erhoben ohne Beteiligung
-des Herstellers. Nachbau auf eigene Verantwortung; Eingriffe können Gewährleistung oder
-Garantie berühren. Es werden keine geschützten Hersteller-Unterlagen wiedergegeben.
+All statements derive from measurements on a single unit, obtained without the
+manufacturer's involvement. Reproduce at your own risk; working on the unit may affect
+warranty or guarantee. No proprietary manufacturer documentation is reproduced here.
 
-## Lizenz & Marken
+## Licence & trademarks
 
-Inhalte unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.de) (siehe
-[`LICENSE`](LICENSE)). Unabhängiges Projekt, **nicht** mit Zimmermann Lüftungs- und
-Wärmesysteme GmbH & Co. KG affiliiert; „PROXON", „Zimmermann" und weitere genannte Namen
-sind Marken ihrer jeweiligen Inhaber und werden beschreibend verwendet.
+Content under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.en) (see
+[`LICENSE`](LICENSE)). Independent project, **not** affiliated with Zimmermann Lüftungs-
+und Wärmesysteme GmbH & Co. KG; "PROXON", "Zimmermann" and other names mentioned are
+trademarks of their respective owners and are used descriptively.
