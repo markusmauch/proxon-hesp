@@ -72,6 +72,10 @@ Die Seiten erscheinen deutsch unter `/` und englisch unter `/en/`. Technisch üb
   zurücknehmen, ohne den Umschalter zu prüfen.
 - Die Action installiert `mkdocs-material` **und** `mkdocs-static-i18n` — bei einem neuen
   Plugin die pip-Zeile im Workflow mitziehen.
+- **Auch die `README.md` ist zweisprachig** (`README.en.md`), verweist aber nicht über das
+  Plugin, sondern über eine Sprachzeile unter der Überschrift. Sie liegt außerhalb von
+  `docs/` und wird daher vom strikten Build **nicht** geprüft — Änderungen dort von Hand
+  in beide Fassungen und die Vokabelprüfung auf beide Dateien laufen lassen.
 
 ## Änderungs-Ablauf
 

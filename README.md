@@ -1,16 +1,19 @@
 # PROXON P-Serie · HESP-Bus (technische Dokumentation)
 
+***Deutsch** · [English](README.en.md)*
+
 Technische Dokumentation des internen RS485-Busses (**HESP**, 19200 Baud) der Zimmermann
 **PROXON P-Serie** Lüftungsheizung: physische Schnittstelle, Telegrammformat und
 Datenpunkte als Grundlage für eigene lokale Auslese- und Steuerimplementierungen. Die
 Dokumentation ist bewusst implementierungsneutral.
 
 📖 **Website:** https://markusmauch.github.io/proxon-hesp/
+(English: https://markusmauch.github.io/proxon-hesp/en/)
 
 ## Inhalt
 
 - **Anlage & Architektur** — Zwei-Platinen-Aufbau, Anschluss X7
-- **HESP-Protokoll** — Frame-Format, Telegrammtypen, Prüfsummenmodell
+- **HESP-Protokoll** — Frame-Format, Telegrammtypen, Prüfsumme
 - **Datenpunkt-Referenz** — Steuer- und Sensor-Datenpunkte
 - **Randbedingungen & offene Punkte** — Bus-Eigenschaften und noch nicht geklärte Fragen
 
