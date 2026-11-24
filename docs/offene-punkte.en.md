@@ -40,13 +40,16 @@ These points concern any implementation that replaces or supplements the control
 | Topic | State |
 |---|---|
 | Assignment of the 12 flags in `0x0066` (switched outputs) | open — the bypass status is held separately in `0x0160` |
-| Filter remaining runtime `0x00ed` | confirmed through its daily decrement; the moment of the decrement is not midnight — the timekeeping (presumably in the control panel) is open |
+| Filter remaining runtime `0x00ed` | confirmed through its daily decrement; the moment of the decrement is not midnight. The controller keeps its own clock (`0x032e`), which is not set without the panel; whether the decrement follows it is open |
 | Naming of the individual operating hour counters in `0x02df` | requires comparison with the panel's system information menu |
 | Status word `0x01f6` (changes in step with the bypass) | meaning open |
 | Role of the STM32 (pure frame bridge or aggregating slave) | open |
 | Triggering a device restart over X7 | no corresponding frame found |
 | Naming of the parameter block `0x0233`–`0x023e` | requires comparison with the protected parameter menu |
 | Full explanation of the 9600 baud bus behaviour | open |
+| Switching threshold of the summer bypass | `0x015f` is set to 12.0 (access mask `0xFF`). In one observed night the bypass closed when the outdoor air fell below about 12 °C and opened again above it in the morning; proof is pending |
+| Enabling the PTC heating elements without the panel | `0x0191` at node 30 is written only by the panel (see [Data point reference](dp-referenz.md#ptc-module-node-30)) |
+| Sensor assignment `0x0194`/`0x022d` on other units | on an FWT 2-R, T1 and T10 are named the other way round compared with the assignment determined here; whether this is device-specific is open |
 
 ## Related sources
 

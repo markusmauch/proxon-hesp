@@ -99,9 +99,33 @@ Panelanzeige zugeordnet.
 | `0x0066` | Array aus 12 Flags (u32) — vermutlich Schaltausgänge; Zuordnung offen, der Bypass-Status meldet sich **nicht** hier, sondern in `0x0160` |
 | `0x0064` | Analog-Rohwerte der Fühlerkanäle (float32, mV; offene Kanäle liegen auf der 3,3-V-Referenz) |
 | `0x03e8` | Status-/Logtext des Controllers (z. B. „Writing parameters to NVRAM backup") |
-| `0x032e` | Betriebszeit seit Start (Sekunden) |
+| `0x032e` | **Datum und Uhrzeit** des Controllers, gepackt (siehe unten) |
 | `0x00d2` / `0x00d3` | Lüfterstufen-→-Prozent-Kennlinien |
 | `0x0233`–`0x023e` | Parameterblock (Winter/Wärmepumpe), nur auf oberster Zugriffsebene schreibbar |
+| `0x0229` / `0x022a` | vom Panel zyklisch geschrieben, bei der untersuchten Anlage in allen Betriebsarten **konstant 21,0** (float32); ohne Raummodule keine erkennbare Funktion |
+
+Das Parameterverzeichnis `0x0033` des Lüftungsgeräts umfasst 163 Einträge (seitenweises
+Lesen siehe [Protokoll](protokoll.md#verzeichnis-seitenweise-lesen)).
+
+!!! note "Uhr `0x032e`"
+    Der Wert ist ein uint32 mit Minutenauflösung: Bit 0–5 Minute, 6–10 Stunde,
+    11–13 Wochentag (0 = Sonntag), 14–20 Jahr − 2000, 21–24 Monat, 25–29 Tag. Ein
+    SET `0x032e` (Knoten 1 an 2, 4 Byte) wird sofort quittiert; übernommen werden
+    Datum, Stunde und Minute, die Sekunden führt der Controller selbst weiter.
+    Ohne Panel stellt niemand die Uhr: Bei der untersuchten Anlage lief sie nach dem
+    Ausbau des Panels auf einem Stand von 2011. Das Format stammt von Martin Kneppe
+    (FWT 2-R) und ist an der P 2H-L durch Setzen und Zurücklesen bestätigt.
+
+## PTC-Modul (Knoten 30)
+
+| DP | Typ | Bedeutung |
+|---|---|---|
+| `0x0191` | int16 | vom Panel zyklisch geschrieben: **0** = Normalbetrieb, **1** = Wärmeelemente freigegeben, `0xdc00` solange das Service-Menü geöffnet ist |
+
+Die Werte wurden in Mitschnitten mit angeschlossenem Panel beobachtet (Betriebsarten-Test
+und Service-Menü). Ein Mitschnitt einer FWT 2-R zeigt dasselbe Muster: das Panel schreibt
+`0x0191` an Knoten 30 etwa alle 11 Sekunden. Ohne Panel schreibt diesen Datenpunkt
+niemand; ob das PTC-Modul die Wärmeelemente dann jemals freigibt, ist offen.
 
 ## Beobachtete Randbedingungen beim Schreiben
 

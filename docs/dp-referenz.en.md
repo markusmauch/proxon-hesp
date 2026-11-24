@@ -99,9 +99,33 @@ the panel display.
 | `0x0066` | Array of 12 flags (u32) — presumably switched outputs; assignment open, the bypass status does **not** report here but in `0x0160` |
 | `0x0064` | Raw analogue values of the sensor channels (float32, mV; open channels sit at the 3.3 V reference) |
 | `0x03e8` | Status / log text of the controller (e.g. "Writing parameters to NVRAM backup") |
-| `0x032e` | Operating time since start (seconds) |
+| `0x032e` | **Date and time** of the controller, packed (see below) |
 | `0x00d2` / `0x00d3` | Fan stage → percentage characteristic curves |
 | `0x0233`–`0x023e` | Parameter block (winter / heat pump), writable only at the top access level |
+| `0x0229` / `0x022a` | written cyclically by the panel; on the unit examined **constant 21.0** (float32) in every operating mode; no discernible function without room modules |
+
+The parameter directory `0x0033` of the ventilation unit has 163 entries (for reading it
+page by page see [Protocol](protokoll.md#reading-the-directory-page-by-page)).
+
+!!! note "Clock `0x032e`"
+    The value is a uint32 with minute resolution: bits 0–5 minute, 6–10 hour,
+    11–13 weekday (0 = Sunday), 14–20 year − 2000, 21–24 month, 25–29 day. A
+    SET `0x032e` (node 1 to 2, 4 bytes) is acknowledged immediately; date, hour and
+    minute are taken over, the controller keeps counting the seconds itself.
+    Without the panel nobody sets the clock: on the unit examined it was running on a
+    date in 2011 after the panel had been removed. The format comes from Martin Kneppe
+    (FWT 2-R) and was confirmed on the P 2H-L by setting and reading back.
+
+## PTC module (node 30)
+
+| DP | Type | Meaning |
+|---|---|---|
+| `0x0191` | int16 | written cyclically by the panel: **0** = normal operation, **1** = heating elements enabled, `0xdc00` while the service menu is open |
+
+The values were observed in captures with the panel connected (operating mode test and
+service menu). A capture from an FWT 2-R shows the same pattern: the panel writes
+`0x0191` to node 30 about every 11 seconds. Without the panel nobody writes this data
+point; whether the PTC module ever enables the heating elements in that case is open.
 
 ## Observed constraints when writing
 

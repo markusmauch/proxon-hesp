@@ -23,7 +23,7 @@ Jeder Frame:
 |---|---|---|
 | `h0 h1 h2` | 3 | **Adresskopf**, 24-bit little-endian: Typ, Quell- und Zieladresse (siehe unten) |
 | `id_lo id_hi` | 2 | **Datenpunkt-ID, 16-bit little-endian** |
-| `00 00` | 2 | Reserviert / Sub-Selektor |
+| `00 00` | 2 | Bei normalen Datenpunkten `00 00`; bei den Verzeichnis-Listen **Element-Offset** (siehe [Verzeichnis seitenweise lesen](#verzeichnis-seitenweise-lesen)) |
 | `len` | 1 | **Nibble-Anzahl** der Daten (`0x08`=4 B, `0x20`=16 B, `0xe0`=224 B) |
 | `data` | n | Nutzdaten (float32 LE, int, Array …) |
 | `crc` | 2 | Prüfsumme (little-endian) |
@@ -186,7 +186,7 @@ Der Bus beschreibt sich teilweise selbst:
 | DP | Inhalt |
 |---|---|
 | `0x0001` | Klartextname des Nodes (z. B. Knoten 30 = „PTC-Modul") |
-| `0x0033` | Liste aller Parameter-DP-Nummern (Verzeichnis) |
+| `0x0033` | Liste aller Parameter-DP-Nummern (Verzeichnis, seitenweise lesbar) |
 | `0x0034` | parallele Typcode-Liste dazu |
 | `0x0038` | **Zugriffslevel-Maske** je DP (siehe unten) |
 | `0x0039` | Einheiten-Code je DP (8=°C, 5=Sekunden, 11=String …) |
@@ -209,5 +209,33 @@ Ein Byte pro DP kodiert die Schreibrechte über vier Zugriffsebenen (je 2 Bit R/
 | `0xD5` | nur oberste Ebene schreibbar | der **Fachmann-Parameterblock** |
 | `0xC0` | nur oberste Ebene sichtbar | Werks-Kennlinien, Lüfter-Arrays |
 
+Daneben kommen im Verzeichnis die Masken `0xF0`, `0xF5`, `0xE0` und `0x40` vor; ihre
+Bedeutung im Einzelnen ist offen (vermutlich Fachmann- bzw. interne Ebenen).
+
 Die Maske bestätigt unabhängig, welche DPs das (PIN-geschützte) Fachmann-Menü ausmachen —
 nützlich, um beim Parametrieren nicht blind in geschützte Register zu schreiben.
+
+### Verzeichnis seitenweise lesen
+
+Die Listen `0x0033`, `0x0034`, `0x0038` und `0x0039` werden seitenweise gelesen. Die zwei
+Bytes nach der Datenpunkt-ID (im Frame-Format oben `00 00`) geben dabei den
+**Element-Offset** an. Der Controller antwortet mit **64 Einträgen** ab diesem Offset,
+und zwar nur, solange Offset + 64 die Listenlänge nicht überschreitet. Den Rest der Liste
+liefert daher der größte noch gültige Offset.
+
+Bei der untersuchten Anlage sind die Offsets 0 bis 99 gültig, das Verzeichnis des
+Lüftungsgeräts umfasst also **163 Einträge**. Die Antwort auf eine volle Seite ist
+138 Byte lang.
+
+!!! note "Beobachtungen beim Lesen langer Antworten"
+    - Eine frühere Fassung dieser Seite nannte 59 Einträge. Das war ein Lesefehler: Wer
+      Frames am Zeichenabstand trennt, kann eine lange Antwort über einen USB-Adapter
+      zerteilt empfangen (hier nach 128 Byte). Ohne Prüfung der CRC fällt das nicht auf.
+      Zuverlässig ist, so lange zu sammeln, bis die CRC stimmt.
+    - Folgt eine Abfrage unmittelbar auf die vorige Antwort, blieb bei der untersuchten
+      Anlage jede zweite Abfrage unbeantwortet. Mit einer kurzen Pause (hier 250 ms
+      Wartefenster je Abfrage) wurden alle Abfragen beantwortet.
+
+Den Hinweis auf das Offset-Verfahren hat Martin Kneppe an einer FWT 2-R beobachtet
+([Diskussion](https://github.com/markusmauch/proxon-hesp/pull/2)); an der P 2H-L ist es
+reproduziert.

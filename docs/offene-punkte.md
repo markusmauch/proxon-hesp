@@ -41,13 +41,16 @@ Diese Punkte betreffen jede Implementierung, die das Bedienpanel ersetzt oder er
 | Thema | Stand |
 |---|---|
 | Zuordnung der 12 Flags in `0x0066` (Schaltausgänge) | offen — der Bypass-Status liegt separat in `0x0160` |
-| Filter-Restlaufzeit `0x00ed` | über tägliches Dekrement bestätigt; der Dekrement-Zeitpunkt liegt nicht bei Mitternacht — die Zeitführung (vermutlich im Bedienpanel) ist offen |
+| Filter-Restlaufzeit `0x00ed` | über tägliches Dekrement bestätigt; der Dekrement-Zeitpunkt liegt nicht bei Mitternacht. Der Controller führt eine eigene Uhr (`0x032e`), die ohne Panel nicht gestellt wird; ob das Dekrement ihr folgt, ist offen |
 | Benennung der einzelnen Betriebsstundenzähler in `0x02df` | erfordert Abgleich mit dem Panel-Systeminfo-Menü |
 | Statuswort `0x01f6` (wechselt synchron zum Bypass) | Bedeutung offen |
 | Rolle des STM32 (reine Frame-Brücke oder aggregierender Slave) | offen |
 | Auslösung eines Geräte-Neustarts über X7 | kein entsprechender Frame gefunden |
 | Benennung des Parameterblocks `0x0233`–`0x023e` | erfordert Abgleich mit dem geschützten Parametermenü |
 | Vollständige Erklärung des 9600-Baud-Bus-Verhaltens | offen |
+| Schaltschwelle des Sommer-Bypass | `0x015f` steht auf 12,0 (Zugriffsmaske `0xFF`). In einer beobachteten Nacht schloss der Bypass, als die Frischluft unter etwa 12 °C fiel, und öffnete morgens oberhalb davon; ein Nachweis steht aus |
+| Freigabe der PTC-Wärmeelemente ohne Panel | `0x0191` an Knoten 30 wird nur vom Panel geschrieben (siehe [Datenpunkt-Referenz](dp-referenz.md#ptc-modul-knoten-30)) |
+| Fühlerzuordnung `0x0194`/`0x022d` bei anderen Geräten | an einer FWT 2-R sind T1 und T10 gegenüber der hier bestimmten Zuordnung vertauscht benannt; ob das gerätespezifisch ist, ist offen |
 
 ## Verwandte Quellen
 

@@ -23,7 +23,7 @@ Every frame:
 |---|---|---|
 | `h0 h1 h2` | 3 | **Address header**, 24-bit little-endian: type, source and destination address (see below) |
 | `id_lo id_hi` | 2 | **Data point ID, 16-bit little-endian** |
-| `00 00` | 2 | Reserved / sub-selector |
+| `00 00` | 2 | `00 00` for ordinary data points; for the directory lists the **element offset** (see [Reading the directory page by page](#reading-the-directory-page-by-page)) |
 | `len` | 1 | **Nibble count** of the data (`0x08`=4 B, `0x20`=16 B, `0xe0`=224 B) |
 | `data` | n | Payload (float32 LE, int, array …) |
 | `crc` | 2 | Checksum (little-endian) |
@@ -187,7 +187,7 @@ The bus describes itself in part:
 | DP | Content |
 |---|---|
 | `0x0001` | Plain-text name of the node (e.g. node 30 = "PTC module") |
-| `0x0033` | List of all parameter DP numbers (directory) |
+| `0x0033` | List of all parameter DP numbers (directory, readable page by page) |
 | `0x0034` | Parallel list of type codes for it |
 | `0x0038` | **Access level mask** per DP (see below) |
 | `0x0039` | Unit code per DP (8=°C, 5=seconds, 11=string …) |
@@ -210,5 +210,32 @@ One byte per DP encodes the write permissions across four access levels (2 bits 
 | `0xD5` | writable at the top level only | the **installer parameter block** |
 | `0xC0` | visible at the top level only | factory characteristic curves, fan arrays |
 
+The directory also contains the masks `0xF0`, `0xF5`, `0xE0` and `0x40`; their individual
+meaning is open (presumably installer or internal levels).
+
 The mask independently confirms which DPs make up the (PIN-protected) installer menu —
 useful to avoid writing blindly into protected registers when parameterising.
+
+### Reading the directory page by page
+
+The lists `0x0033`, `0x0034`, `0x0038` and `0x0039` are read page by page. The two bytes
+after the data point ID (`00 00` in the frame format above) give the **element offset**.
+The controller answers with **64 entries** starting at that offset, but only as long as
+offset + 64 does not exceed the list length. The remainder of the list is therefore
+returned by the largest offset that is still valid.
+
+On the unit examined, offsets 0 to 99 are valid, so the ventilation unit's directory has
+**163 entries**. The answer to a full page is 138 bytes long.
+
+!!! note "Observations when reading long answers"
+    - An earlier version of this page stated 59 entries. That was a read error: a reader
+      that splits frames at the inter-character gap can receive a long answer in pieces
+      through a USB adapter (here after 128 bytes). Without checking the CRC this goes
+      unnoticed. The reliable approach is to keep collecting until the CRC matches.
+    - When a query followed the previous answer immediately, every second query went
+      unanswered on the unit examined. With a short pause (here a 250 ms window per
+      query) all queries were answered.
+
+The offset method was observed by Martin Kneppe on an FWT 2-R
+([discussion](https://github.com/markusmauch/proxon-hesp/pull/2)) and reproduced on the
+P 2H-L.
