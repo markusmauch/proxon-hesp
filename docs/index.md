@@ -21,13 +21,14 @@ sie beschreibt die Schnittstelle, nicht eine bestimmte Anwendung.
 
 Die P-Serie wird über ein zentrales TFT-Bedienpanel bedient, das sich in seinen
 Systeminformationen als „BDE Comfort" ausweist. Intern kommunizieren zwei Platinen über
-den Steckverbinder **X7** mit **19200 Baud, 8N1**. Auf diesem Bus stellt ein
+einen RS485-Bus mit **19200 Baud, 8N1**, der am freien Stecker **X7** der Hauptplatine
+zugänglich ist. Auf diesem Bus stellt ein
 NXP-LPC1758-Controller sämtliche Sensorwerte, Lüfterstufen, Betriebsarten und Sollwerte
 als typisierte **Datenpunkte** bereit.
 
 ```mermaid
 flowchart LR
-    BDE["TFT-Panel<br/>(BDE Comfort)"] -->|9600 8N1<br/>Cat7| PTC["PTC-Modul<br/>STM32<br/>(X2 ⟷ X7)"]
+    BDE["TFT-Panel<br/>(BDE Comfort)"] -->|9600 8N1<br/>Cat7| PTC["PTC-Modul<br/>STM32<br/>(X1 ⟷ X2)"]
     PTC -->|19200 8N1<br/>HESP| LPC["Hauptplatine<br/>LPC1758"]
     LPC --- SENS["Sensoren · Lüfter ·<br/>Wärmepumpe · Ventile"]
 ```

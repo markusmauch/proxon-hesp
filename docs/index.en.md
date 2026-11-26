@@ -19,13 +19,14 @@ here is therefore the only known point of access. This documentation is delibera
 ## System overview
 
 The P series is operated from a central TFT control panel, which identifies itself as
-"BDE Comfort" in its system information. Internally, two boards communicate through
-connector **X7** at **19200 baud, 8N1**. On this bus an NXP LPC1758 controller provides
+"BDE Comfort" in its system information. Internally, two boards communicate over an
+RS485 bus at **19200 baud, 8N1**, which is accessible at the unused connector **X7** on the
+main board. On this bus an NXP LPC1758 controller provides
 all sensor readings, fan stages, operating modes and setpoints as typed **data points**.
 
 ```mermaid
 flowchart LR
-    BDE["TFT panel<br/>(BDE Comfort)"] -->|9600 8N1<br/>Cat7| PTC["PTC module<br/>STM32<br/>(X2 ⟷ X7)"]
+    BDE["TFT panel<br/>(BDE Comfort)"] -->|9600 8N1<br/>Cat7| PTC["PTC module<br/>STM32<br/>(X1 ⟷ X2)"]
     PTC -->|19200 8N1<br/>HESP| LPC["Main board<br/>LPC1758"]
     LPC --- SENS["Sensors · fans ·<br/>heat pump · valves"]
 ```

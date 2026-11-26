@@ -21,24 +21,38 @@ Two boards work together inside the unit:
 | **Main board** | NXP **LPC1758** (Cortex-M3) | control, sensors, fans, heat pump, relays |
 | **PTC module 4×** | **STM32F1** + 4 power relays | switches the PTC heating elements; couples the two buses |
 
-The control panel talks to the PTC module at **9600 baud** (over a Cat7 connection named
-**X2**). The PTC module in turn is connected to the main board through connector **X7** —
-and that is where the actual control bus, **HESP at 19200 baud**, runs.
+The control panel is connected over a Cat7 cable at **9600 baud** to connector **X1 of the
+PTC module**. From connector **X2 of the PTC module** a four-wire cable runs to the connector
+tower **X6 on the main board**. That link carries the actual control bus, **HESP at
+19200 baud**.
+
+Next to X6 the main board has the small connector **X7**. It is unused from the factory
+(on the unit studied it only held an empty mating plug), but it carries the same HESP bus.
+That is where the RS485 adapter was connected for this investigation.
 
 ```mermaid
 flowchart TB
     subgraph Unit
         direction LR
-        X2["X2"] --- STM["PTC module<br/>STM32F1<br/>4× relays"]
-        STM --- X7["X7"]
-        X7 --- LPC["Main board<br/>LPC1758"]
+        X1["PTC-X1"] --- STM["PTC module<br/>STM32F1<br/>4× relays"]
+        STM --- PX2["PTC-X2"]
+        PX2 -->|"19200 8N1<br/>4 wires"| X6["X6"]
+        X6 --- LPC["Main board<br/>LPC1758"]
+        X7["X7<br/>unused ex works"] -. same bus .- X6
     end
-    BDE["TFT panel BDE Comfort"] -->|9600 8N1| X2
+    BDE["TFT panel BDE Comfort"] -->|"9600 8N1<br/>Cat7"| X1
     LPC --- IO["Sensors · 2 fans ·<br/>HP circuit · solenoid valves ·<br/>bypass damper"]
 ```
 
+!!! note "Earlier version"
+    An earlier version of this page called the panel connector "X2" and described X7 as the
+    link between the PTC module and the main board. That was wrong. The assignment above is
+    based on photos of the unit taken before the adapter was connected (see
+    [Photos](#photos)); a second unit with an LT-ZIM V1.6 main board and a PTC module 4× V1.2
+    is wired the same way.
+
 The STM32 on the PTC module is therefore the **active node between the 9600 baud panel
-side and the 19200 baud HESP side** — there is no other path between the two domains.
+side and the 19200 baud HESP side**. No other path between the two sides is known.
 
 !!! note "The relevant bus level"
     Read and control access happen at the **X7 / 19200 baud** (HESP) level. The 9600 baud
@@ -47,14 +61,32 @@ side and the 19200 baud HESP side** — there is no other path between the two d
 
 ## Connector X7
 
-X7 is a 4-pole connector. Pinout (determined with a multimeter and a logic analyser):
+X7 is a small connector right next to an RS485 transceiver on the main board. From above the
+mating plug looks two-pole; on the unit studied four positions were usable. Pinout
+(determined with a multimeter and a logic analyser):
 
-| Pin | Signal |
-|---|---|
-| X7-1 | GND |
-| X7-2 | +12 V (VCC) |
-| X7-3 | Data B− |
-| X7-4 | Data A+ |
+| Pin | Signal | Status |
+|---|---|---|
+| X7-1 | GND | measured |
+| X7-2 | +12 V (VCC) | assumed, not measured |
+| X7-3 | Data B− | measured |
+| X7-4 | Data A+ | measured |
+
+The numbers 1 to 4 are the numbering used in this investigation, not a board marking. The
+available photos do not show unambiguously where pin 1 is.
+
+!!! warning "Measure before connecting"
+    The bus also carries the 12 V supply. Do not copy the pinout by connector number or wire
+    colour; determine it on your own unit:
+
+    1. Powered off: find GND by continuity against a known ground point.
+    2. Powered on: find the wire with 12 V against GND; between A and B about +2.5 V
+       (A against B) were measured here at idle.
+    3. Connect the adapter passively first and listen at 19200 8N1. Only when frames with a
+       valid [checksum](protokoll.md#checksum) arrive is the assignment certain.
+
+    The link PTC-X2 to X6 carries the same bus. Its pinout was not measured in this
+    investigation.
 
 An off-the-shelf **USB-RS485 adapter** (in this investigation one with an SP485EEN
 transceiver, 19200 8N1) is connected as follows:
@@ -77,3 +109,14 @@ actively during normal operation without disturbing the regular communication
 - A **device reboot** is not triggered over X7 (no command frame was found).
 - A **ground heat exchanger** is not fitted to this unit (fresh air comes through a core
   drilling); the optional "T before GHE" sensor is absent accordingly.
+
+## Photos
+
+The photos are from 2021, before the adapter was connected. Serial numbers and the MAC
+address are blacked out. The labels in the pictures are in German.
+
+![Overview: PTC module at the top, main board below](img/uebersicht_2021.jpg)
+
+![Cable route: panel on PTC-X1, cable from PTC-X2 to connector tower X6 on the main board, X7 unused](img/kabelweg_2021.jpg)
+
+![X7 ex works with an empty mating plug, next to the connector towers X6, X4 and X2](img/x7_x6_2021.jpg)
