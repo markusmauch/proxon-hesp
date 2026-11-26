@@ -43,10 +43,11 @@ These points concern any implementation that replaces or supplements the control
 | Filter remaining runtime `0x00ed` | confirmed through its daily decrement; the moment of the decrement is not midnight. The controller keeps its own clock (`0x032e`), which is not set without the panel; whether the decrement follows it is open |
 | Naming of the individual operating hour counters in `0x02df` | requires comparison with the panel's system information menu |
 | Status word `0x01f6` (changes in step with the bypass) | meaning open |
-| Role of the STM32 (pure frame bridge or aggregating slave) | open |
+| Role of the STM32 (pure frame bridge or aggregating slave) | without the panel it sends nothing on the HESP bus (see [Operation without the control panel](anlage.md#operation-without-the-control-panel)); whether it only relays with the panel connected or also derives values itself is open |
 | Triggering a device restart over X7 | no corresponding frame found |
 | Naming of the parameter block `0x0233`–`0x023e` | requires comparison with the protected parameter menu |
 | Full explanation of the 9600 baud bus behaviour | open |
+| Telegram type 4 | observed as the response to invalid directory offsets, payload `01 00`; probably an error response, further codes unknown |
 | Switching threshold of the summer bypass | `0x015f` is set to 12.0 (access mask `0xFF`). Reconstructed over the summer from hourly values (heat recovery ratio open ≈ 0.47, closed 0.70–0.80): the bypass closed whenever the outdoor air was below about 11.6 °C; a fixed minimum supply air temperature explains the data less well (supply air fell to 17.4 °C with the bypass open). Proof by changing the value is pending |
 | Enabling the PTC heating elements without the panel | `0x0191` at node 30 is written only by the panel, with 0 in Eco-Summer and Eco-Winter (see [Data point reference](dp-referenz.md#ptc-module-node-30)); what applies in Stove and Comfort without the panel is open |
 | Defrost bit when the heat pump starts | on an FWT 2-R bit 7 of `0x006c` is also set for about 1.5 min at start-up; not yet observed on the P 2H-L |

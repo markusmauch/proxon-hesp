@@ -8,8 +8,10 @@ determined from our own bus recordings.
 ## Physical layer
 
 - **19200 baud, 8N1**, RS485 half duplex, differential A/B pair on X7-4/X7-3.
-- The master is the **STM32** of the PTC module; it polls the LPC1758 about every
-  5 seconds and re-asserts the current panel state (stage / mode / setpoints) as it does.
+- In the factory setup the **STM32** of the PTC module acts as master towards the
+  LPC1758 and writes the current panel state (stage, mode, setpoints) about every
+  5 seconds. Without a connected panel it sends nothing and the bus is silent (see
+  [Operation without the control panel](anlage.md#operation-without-the-control-panel)).
 
 ## Frame format
 
@@ -67,6 +69,7 @@ the forum and confirmed on the wire:
 | `1` | **SET** (write) | `11 80 00 …` |
 | `2` | **RESPONSE** | `22 40 00 …` |
 | `3` | **CONFIRM** (write acknowledgement) | `23 40 00 …` |
+| `4` | probably an error response (see below) | `24 40 00 …` |
 
 ### Examples
 
@@ -223,6 +226,10 @@ after the data point ID (`00 00` in the frame format above) give the **element o
 The controller answers with **64 entries** starting at that offset, but only as long as
 offset + 64 does not exceed the list length. The remainder of the list is therefore
 returned by the largest offset that is still valid.
+
+For an invalid offset the controller does not stay silent but answers with a type 4
+telegram with the payload `01 00`, for example `24 40 00 33 00 80 00 04 01 00 2b 06` for
+offset 128. This is probably an error response; the meaning of `01 00` is open.
 
 On the unit examined, offsets 0 to 99 are valid, so the ventilation unit's directory has
 **163 entries**. The answer to a full page is 138 bytes long.

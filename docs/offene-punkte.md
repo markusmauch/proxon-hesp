@@ -44,10 +44,11 @@ Diese Punkte betreffen jede Implementierung, die das Bedienpanel ersetzt oder er
 | Filter-Restlaufzeit `0x00ed` | über tägliches Dekrement bestätigt; der Dekrement-Zeitpunkt liegt nicht bei Mitternacht. Der Controller führt eine eigene Uhr (`0x032e`), die ohne Panel nicht gestellt wird; ob das Dekrement ihr folgt, ist offen |
 | Benennung der einzelnen Betriebsstundenzähler in `0x02df` | erfordert Abgleich mit dem Panel-Systeminfo-Menü |
 | Statuswort `0x01f6` (wechselt synchron zum Bypass) | Bedeutung offen |
-| Rolle des STM32 (reine Frame-Brücke oder aggregierender Slave) | offen |
+| Rolle des STM32 (reine Frame-Brücke oder aggregierender Slave) | ohne Panel sendet er auf dem HESP-Bus nichts (siehe [Betrieb ohne Bedienpanel](anlage.md#betrieb-ohne-bedienpanel)); ob er mit Panel nur weiterreicht oder auch selbst Werte bildet, ist offen |
 | Auslösung eines Geräte-Neustarts über X7 | kein entsprechender Frame gefunden |
 | Benennung des Parameterblocks `0x0233`–`0x023e` | erfordert Abgleich mit dem geschützten Parametermenü |
 | Vollständige Erklärung des 9600-Baud-Bus-Verhaltens | offen |
+| Telegrammtyp 4 | beobachtet als Antwort auf ungültige Verzeichnis-Offsets, Nutzdaten `01 00`; vermutlich Fehlerantwort, weitere Codes unbekannt |
 | Schaltschwelle des Sommer-Bypass | `0x015f` steht auf 12,0 (Zugriffsmaske `0xFF`). Über den Sommer aus Stundenwerten rekonstruiert (Rückwärmegrad offen ≈ 0,47, geschlossen 0,70–0,80): Der Bypass schloss, sobald die Frischluft unter etwa 11,6 °C lag; eine feste Mindesttemperatur der Zuluft erklärt die Daten schlechter (Zuluft fiel bei offenem Bypass bis 17,4 °C). Ein Nachweis durch Ändern des Werts steht aus |
 | Freigabe der PTC-Wärmeelemente ohne Panel | `0x0191` an Knoten 30 wird nur vom Panel geschrieben, in Eco-Sommer und Eco-Winter mit 0 (siehe [Datenpunkt-Referenz](dp-referenz.md#ptc-modul-knoten-30)); offen ist, was ohne Panel in Ofen und Komfort gilt |
 | Abtau-Bit beim Anlauf der Wärmepumpe | an einer FWT 2-R steht Bit 7 von `0x006c` auch etwa 1,5 min beim Anlauf; an der P 2H-L noch nicht beobachtet |

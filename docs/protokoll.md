@@ -8,8 +8,10 @@ Prüfsummenmodell wurden aus eigenen Busmitschnitten bestimmt.
 ## Physische Ebene
 
 - **19200 Baud, 8N1**, RS485 halbduplex, differentielles A/B-Paar auf X7-4/X7-3.
-- Master ist der **STM32** des PTC-Moduls; er pollt den LPC1758 etwa alle 5 Sekunden und
-  re-asserted dabei den aktuellen Panel-Zustand (Stufe/Modus/Sollwerte).
+- Im Werkszustand sendet der **STM32** des PTC-Moduls als Master an den LPC1758 und
+  schreibt dabei etwa alle 5 Sekunden den aktuellen Panel-Zustand (Stufe, Modus,
+  Sollwerte). Ohne angeschlossenes Panel sendet er nichts; der Bus ist dann still (siehe
+  [Betrieb ohne Bedienpanel](anlage.md#betrieb-ohne-bedienpanel)).
 
 ## Frame-Format
 
@@ -67,6 +69,7 @@ dokumentiert und am Draht bestätigt:
 | `1` | **SET** (Schreiben) | `11 80 00 …` |
 | `2` | **RESPONSE** (Antwort) | `22 40 00 …` |
 | `3` | **CONFIRM** (Schreibbestätigung) | `23 40 00 …` |
+| `4` | vermutlich Fehlerantwort (siehe unten) | `24 40 00 …` |
 
 ### Beispiele
 
@@ -222,6 +225,11 @@ Bytes nach der Datenpunkt-ID (im Frame-Format oben `00 00`) geben dabei den
 **Element-Offset** an. Der Controller antwortet mit **64 Einträgen** ab diesem Offset,
 und zwar nur, solange Offset + 64 die Listenlänge nicht überschreitet. Den Rest der Liste
 liefert daher der größte noch gültige Offset.
+
+Auf einen ungültigen Offset antwortet der Controller nicht mit Schweigen, sondern mit
+einem Telegramm vom Typ 4 mit den Nutzdaten `01 00`, zum Beispiel
+`24 40 00 33 00 80 00 04 01 00 2b 06` auf Offset 128. Vermutlich ist das eine
+Fehlerantwort; die Bedeutung von `01 00` ist offen.
 
 Bei der untersuchten Anlage sind die Offsets 0 bis 99 gültig, das Verzeichnis des
 Lüftungsgeräts umfasst also **163 Einträge**. Die Antwort auf eine volle Seite ist

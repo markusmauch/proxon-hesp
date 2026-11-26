@@ -102,6 +102,38 @@ communication in this investigation. The bus could be read passively and written
 actively during normal operation without disturbing the regular communication
 (STM32 master ↔ LPC1758).
 
+## Operation without the control panel
+
+On the unit studied, the control panel has been unplugged since July 2026. Since then a
+separate sender on X7 has permanently taken over the role of the master. The following
+points are observations from this operation.
+
+- **Without the panel the HESP bus is silent.** The PTC module then sends no telegrams of
+  its own. A device that only listens receives nothing without the panel; this matches the
+  observation on a second unit.
+- **The main board still answers.** QUERY and SET telegrams to node 2 are answered or
+  acknowledged directly without the panel.
+- **The state has to be sent cyclically.** The set that the panel writes about every
+  5 seconds was reproduced, in the panel's order: operating mode `0x020a`, fan stage
+  `0x00e1`, room temperature `0x0226`, room setpoint `0x0227`, followed by the values the
+  panel always sends unchanged, `0x0229` and `0x022a` (21.0 each) and `0x022c`, `0x03b6`
+  and `0x01f8` (0 each). Without this set the main board fell back to the fallback state
+  (see below). Every SET is acknowledged with a CONFIRM.
+- **Fallback state:** If the master's telegrams stop, the unit keeps ventilating with
+  fixed fan speeds after a while (observed roughly stage 3), and `0x020a` then reads 6.
+  When the master sends again, the main board adopts the state it sends. How long it takes
+  until the fallback has not been measured.
+- **Never two masters at once.** When the panel and a separate sender were active at the
+  same time, requests and responses overlapped. Responses could then no longer be
+  attributed reliably to one's own request, and readings without physical meaning
+  appeared. For checks with the panel the separate sender was therefore silenced
+  completely beforehand.
+- **What nobody takes care of without the panel:** nobody sets the device clock `0x032e`;
+  it keeps running, but on the unit studied it had never been set and was set once via
+  SET. Time programmes are lost (see
+  [Constraints](offene-punkte.md#further-constraints-of-the-unit)). The filter countdown
+  `0x00ed`, on the other hand, keeps counting in the main board.
+
 ## What is NOT on X7
 
 - The **T300 domestic hot water heat pump** has its own controller and works entirely

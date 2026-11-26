@@ -103,6 +103,37 @@ Kommunikation in dieser Untersuchung nicht. Der Bus konnte im laufenden Betrieb 
 mitgelesen und aktiv beschrieben werden, ohne die reguläre Kommunikation
 (STM32-Master ↔ LPC1758) zu stören.
 
+## Betrieb ohne Bedienpanel
+
+Bei der untersuchten Anlage ist das Bedienpanel seit Juli 2026 abgezogen. Ein eigener
+Sender an X7 übernimmt seither dauerhaft die Rolle des Masters. Die folgenden Punkte sind
+Beobachtungen aus diesem Betrieb.
+
+- **Ohne Panel ist der HESP-Bus still.** Das PTC-Modul sendet dann von sich aus keine
+  Telegramme. Ein Gerät, das nur mitliest, empfängt ohne Panel nichts; das deckt sich mit
+  der Beobachtung an einer zweiten Anlage.
+- **Die Hauptplatine antwortet trotzdem.** QUERY- und SET-Telegramme an Knoten 2 werden
+  ohne Panel direkt beantwortet beziehungsweise quittiert.
+- **Der Zustand muss zyklisch gesendet werden.** Nachgebildet wurde der Satz, den das
+  Panel etwa alle 5 Sekunden schreibt, in dessen Reihenfolge: Betriebsart `0x020a`,
+  Lüfterstufe `0x00e1`, Raumtemperatur `0x0226`, Raumsollwert `0x0227`, danach die vom
+  Panel unverändert mitgesendeten Werte `0x0229` und `0x022a` (je 21,0) sowie `0x022c`,
+  `0x03b6` und `0x01f8` (je 0). Fehlte dieser Satz, fiel die Hauptplatine in den
+  Rückfallzustand (siehe unten). Jedes SET wird mit einem CONFIRM quittiert.
+- **Rückfallzustand:** Bleiben die Telegramme des Masters aus, lüftet die Anlage nach
+  einiger Zeit mit festen Drehzahlen weiter (beobachtet etwa Stufe 3), `0x020a` liest sich
+  dann als 6. Sendet der Master wieder, übernimmt die Hauptplatine den gesendeten Zustand.
+  Wie lange es bis zum Rückfall dauert, ist nicht vermessen.
+- **Nie zwei Master gleichzeitig.** Waren Panel und eigener Sender zugleich aktiv,
+  überlagerten sich Anfragen und Antworten. Antworten ließen sich dann nicht mehr sicher
+  der eigenen Anfrage zuordnen, und es entstanden Messwerte ohne physikalischen Sinn. Für
+  Prüfungen mit Panel wurde der eigene Sender deshalb vorher vollständig stummgeschaltet.
+- **Was ohne Panel niemand mehr übernimmt:** Die Geräteuhr `0x032e` stellt niemand; sie
+  läuft weiter, war aber bei der untersuchten Anlage nie gestellt und wurde einmalig per
+  SET gesetzt. Zeitprogramme entfallen (siehe
+  [Randbedingungen](offene-punkte.md#weitere-randbedingungen-der-anlage)). Der
+  Filter-Countdown `0x00ed` zählt dagegen in der Hauptplatine weiter.
+
 ## Was NICHT auf X7 liegt
 
 - Die **Trinkwasser-Wärmepumpe T300** hat einen eigenen Regler und arbeitet vollständig
