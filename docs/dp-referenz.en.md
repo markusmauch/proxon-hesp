@@ -74,6 +74,7 @@ the panel display.
 | `0x0160` | **Summer bypass status**: 0 = closed (heat recovery active), 1 = bypass active |
 | `0x00ed` | **Filter remaining runtime** in days (u32) |
 | `0x0130` | Fault text (plain text) |
+| `0x006c` | **Status word** (u32); bit 7 is set during defrosting |
 
 !!! note "Determining the bypass status"
     In an overnight long-term measurement `0x0160` was the only data point to change from
@@ -84,6 +85,16 @@ the panel display.
     position of the supply air (between full heat recovery and full bypass) fits a
     **controlled** summer bypass. At the same moment `0x01f6` changed from `0x40` to
     `0x20` (status word candidate, meaning open).
+
+!!! note "Defrost bit in `0x006c`"
+    In normal operation `0x006c` read a constant 39 on the unit examined (bits 0, 1, 2 and
+    5), and 167 during defrosting (bit 7 in addition). In three consecutive defrost cycles
+    bit 7 was set about 66 s before the fans stopped and cleared exactly when they
+    restarted. On the P 2H-L both fans stand still during defrosting (about 6 min, every
+    38 min or so with the outdoor air around 0 °C); on an FWT 2-R, according to Martin
+    Kneppe, they keep running at 20 % supply and 60 % extract. The pointer to the bit came
+    from Martin Kneppe; whether it is also set briefly when the heat pump starts has not yet
+    been observed on the P 2H-L.
 
 !!! note "Filter remaining runtime"
     At the time of measurement `0x00ed` matched the panel's filter remaining runtime
@@ -116,14 +127,35 @@ page by page see [Protocol](protokoll.md#reading-the-directory-page-by-page)).
     date in 2011 after the panel had been removed. The format comes from Martin Kneppe
     (FWT 2-R) and was confirmed on the P 2H-L by setting and reading back.
 
+## Heat pump demand
+
+| DP | Value | Meaning |
+|---|---|---|
+| `0x0115` | 0.4 | Room switch-on threshold in K: demand as soon as the room is this far below the setpoint |
+| `0x011c` | 2.0 | Continuous-run limit in °C: demand regardless of the room as long as the outdoor air (T3) is below it |
+
+!!! note "Observation in Eco-Winter"
+    Ten days of minute data were evaluated (room setpoint 20 °C). All eleven starts
+    triggered by the room occurred at a room temperature of 19.6 °C; the heat pump stopped
+    as soon as the room reached the setpoint again. Three further starts occurred with the
+    room above that threshold, each shortly after T3 had fallen to 2.0 °C or below. No start
+    occurred without one of the two conditions. The continuous run ended at T3 around
+    2.9 °C, in four of five cases directly after a defrost cycle, because the outdoor air
+    sensor briefly warms up in the stationary air. The meaning of both data points comes
+    from Martin Kneppe (FWT 2-R); on the P 2H-L it rests on the matching thresholds, not on
+    changing the values.
+
 ## PTC module (node 30)
 
 | DP | Type | Meaning |
 |---|---|---|
-| `0x0191` | int16 | written cyclically by the panel: **0** = normal operation, **1** = heating elements enabled, `0xdc00` while the service menu is open |
+| `0x0191` | int16 | written cyclically by the panel: **0** in Eco-Summer and Eco-Winter, **1** in Stove and Comfort, `0xdc00` while the service menu is open |
 
 The values were observed in captures with the panel connected (operating mode test and
-service menu). A capture from an FWT 2-R shows the same pattern: the panel writes
+service menu). In the operating mode test the panel question "enable heating elements"
+was answered yes in all three heating modes; in Eco-Winter `0x0191` nevertheless stayed
+0. The value therefore follows the operating mode, not the answer to that question. A
+comparison with the switching state "PTC living" is still pending. A capture from an FWT 2-R shows the same pattern: the panel writes
 `0x0191` to node 30 about every 11 seconds. Without the panel nobody writes this data
 point; whether the PTC module ever enables the heating elements in that case is open.
 

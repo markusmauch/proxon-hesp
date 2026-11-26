@@ -48,9 +48,11 @@ Diese Punkte betreffen jede Implementierung, die das Bedienpanel ersetzt oder er
 | Auslösung eines Geräte-Neustarts über X7 | kein entsprechender Frame gefunden |
 | Benennung des Parameterblocks `0x0233`–`0x023e` | erfordert Abgleich mit dem geschützten Parametermenü |
 | Vollständige Erklärung des 9600-Baud-Bus-Verhaltens | offen |
-| Schaltschwelle des Sommer-Bypass | `0x015f` steht auf 12,0 (Zugriffsmaske `0xFF`). In einer beobachteten Nacht schloss der Bypass, als die Frischluft unter etwa 12 °C fiel, und öffnete morgens oberhalb davon; ein Nachweis steht aus |
-| Freigabe der PTC-Wärmeelemente ohne Panel | `0x0191` an Knoten 30 wird nur vom Panel geschrieben (siehe [Datenpunkt-Referenz](dp-referenz.md#ptc-modul-knoten-30)) |
-| Fühlerzuordnung `0x0194`/`0x022d` bei anderen Geräten | an einer FWT 2-R sind T1 und T10 gegenüber der hier bestimmten Zuordnung vertauscht benannt; ob das gerätespezifisch ist, ist offen |
+| Schaltschwelle des Sommer-Bypass | `0x015f` steht auf 12,0 (Zugriffsmaske `0xFF`). Über den Sommer aus Stundenwerten rekonstruiert (Rückwärmegrad offen ≈ 0,47, geschlossen 0,70–0,80): Der Bypass schloss, sobald die Frischluft unter etwa 11,6 °C lag; eine feste Mindesttemperatur der Zuluft erklärt die Daten schlechter (Zuluft fiel bei offenem Bypass bis 17,4 °C). Ein Nachweis durch Ändern des Werts steht aus |
+| Freigabe der PTC-Wärmeelemente ohne Panel | `0x0191` an Knoten 30 wird nur vom Panel geschrieben, in Eco-Sommer und Eco-Winter mit 0 (siehe [Datenpunkt-Referenz](dp-referenz.md#ptc-modul-knoten-30)); offen ist, was ohne Panel in Ofen und Komfort gilt |
+| Abtau-Bit beim Anlauf der Wärmepumpe | an einer FWT 2-R steht Bit 7 von `0x006c` auch etwa 1,5 min beim Anlauf; an der P 2H-L noch nicht beobachtet |
+| Bedeutung von `0x0104` (115 / 125) | an einer FWT 2-R als Abschaltgrenzen des Verdichters gedeutet; T13 (`0x0195`) erreicht an der P 2H-L im Dauerlauf bis 111 °C, eine Abschaltung dabei ist nicht beobachtet |
+| Fühlerzuordnung `0x0194`/`0x022d` bei anderen Geräten | an einer FWT 2-R waren T1 und T10 gegenüber der hier bestimmten Zuordnung zunächst vertauscht benannt; der dortige Temperaturverlauf (`0x022d` bei laufender Wärmepumpe 3 bis 5 K wärmer als `0x0194`) spricht inzwischen ebenfalls für die hier bestimmte Zuordnung |
 
 ## Verwandte Quellen
 

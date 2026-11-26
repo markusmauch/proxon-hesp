@@ -47,9 +47,11 @@ These points concern any implementation that replaces or supplements the control
 | Triggering a device restart over X7 | no corresponding frame found |
 | Naming of the parameter block `0x0233`–`0x023e` | requires comparison with the protected parameter menu |
 | Full explanation of the 9600 baud bus behaviour | open |
-| Switching threshold of the summer bypass | `0x015f` is set to 12.0 (access mask `0xFF`). In one observed night the bypass closed when the outdoor air fell below about 12 °C and opened again above it in the morning; proof is pending |
-| Enabling the PTC heating elements without the panel | `0x0191` at node 30 is written only by the panel (see [Data point reference](dp-referenz.md#ptc-module-node-30)) |
-| Sensor assignment `0x0194`/`0x022d` on other units | on an FWT 2-R, T1 and T10 are named the other way round compared with the assignment determined here; whether this is device-specific is open |
+| Switching threshold of the summer bypass | `0x015f` is set to 12.0 (access mask `0xFF`). Reconstructed over the summer from hourly values (heat recovery ratio open ≈ 0.47, closed 0.70–0.80): the bypass closed whenever the outdoor air was below about 11.6 °C; a fixed minimum supply air temperature explains the data less well (supply air fell to 17.4 °C with the bypass open). Proof by changing the value is pending |
+| Enabling the PTC heating elements without the panel | `0x0191` at node 30 is written only by the panel, with 0 in Eco-Summer and Eco-Winter (see [Data point reference](dp-referenz.md#ptc-module-node-30)); what applies in Stove and Comfort without the panel is open |
+| Defrost bit when the heat pump starts | on an FWT 2-R bit 7 of `0x006c` is also set for about 1.5 min at start-up; not yet observed on the P 2H-L |
+| Meaning of `0x0104` (115 / 125) | interpreted on an FWT 2-R as compressor cut-off limits; T13 (`0x0195`) reaches up to 111 °C on the P 2H-L in continuous operation, no cut-off observed |
+| Sensor assignment `0x0194`/`0x022d` on other units | on an FWT 2-R, T1 and T10 were initially named the other way round compared with the assignment determined here; the temperature profile there (`0x022d` 3 to 5 K warmer than `0x0194` while the heat pump runs) now also supports the assignment determined here |
 
 ## Related sources
 

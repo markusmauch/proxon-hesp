@@ -74,6 +74,7 @@ Panelanzeige zugeordnet.
 | `0x0160` | **Sommer-Bypass-Status**: 0 = geschlossen (Wärmerückgewinnung aktiv), 1 = Bypass aktiv |
 | `0x00ed` | **Filter-Restlaufzeit** in Tagen (u32) |
 | `0x0130` | Fehlertext (Klartext) |
+| `0x006c` | **Zustandswort** (u32); Bit 7 steht während der Abtauung |
 
 !!! note "Bestimmung des Bypass-Status"
     `0x0160` wechselte in einer nächtlichen Langzeitmessung als einziger Datenpunkt
@@ -84,6 +85,16 @@ Panelanzeige zugeordnet.
     (zwischen Voll-Wärmerückgewinnung und Voll-Bypass) passt zum **geregelten**
     Sommerbypass. Zeitgleich wechselte `0x01f6` von `0x40` auf `0x20`
     (Statuswort-Kandidat, Bedeutung offen).
+
+!!! note "Abtau-Bit in `0x006c`"
+    Im Normalbetrieb stand `0x006c` bei der untersuchten Anlage konstant auf 39 (Bits 0, 1, 2
+    und 5), während der Abtauung auf 167 (zusätzlich Bit 7). An drei aufeinanderfolgenden
+    Abtauungen wurde Bit 7 etwa 66 s vor dem Stillstand der Lüfter gesetzt und fiel genau mit
+    ihrem Wiederanlauf ab. Bei der P 2H-L stehen während der Abtauung beide Lüfter still
+    (Dauer etwa 6 min, Abstand etwa 38 min bei Frischluft um 0 °C); an einer FWT 2-R laufen
+    sie nach Angabe von Martin Kneppe mit 20 % Zuluft und 60 % Abluft weiter. Den Hinweis auf
+    das Bit gab Martin Kneppe; ob es auch beim Anlauf der Wärmepumpe kurz gesetzt wird, ist an
+    der P 2H-L noch nicht beobachtet.
 
 !!! note "Filter-Restlaufzeit"
     `0x00ed` stimmte zum Messzeitpunkt exakt mit der Panel-Anzeige der
@@ -116,14 +127,35 @@ Lesen siehe [Protokoll](protokoll.md#verzeichnis-seitenweise-lesen)).
     Ausbau des Panels auf einem Stand von 2011. Das Format stammt von Martin Kneppe
     (FWT 2-R) und ist an der P 2H-L durch Setzen und Zurücklesen bestätigt.
 
+## Anforderung der Wärmepumpe
+
+| DP | Wert | Bedeutung |
+|---|---|---|
+| `0x0115` | 0,4 | Einschaltschwelle Raum in K: Anforderung, sobald der Raum um diesen Betrag unter dem Sollwert liegt |
+| `0x011c` | 2,0 | Dauerlauf-Grenze in °C: Anforderung unabhängig vom Raum, solange die Frischluft (T3) darunter liegt |
+
+!!! note "Beobachtung in Eco-Winter"
+    Ausgewertet wurden zehn Tage Minutendaten (Raumsoll 20 °C). Alle elf Anläufe, die über
+    den Raum ausgelöst wurden, lagen bei einer Raumtemperatur von 19,6 °C; abgeschaltet
+    wurde, sobald der Raum das Soll wieder erreichte. Drei weitere Anläufe erfolgten bei
+    einem Raum oberhalb dieser Schwelle, jeweils kurz nachdem T3 auf 2,0 °C oder darunter
+    gefallen war. Ein Anlauf ohne eine der beiden Bedingungen trat nicht auf. Der Dauerlauf
+    endete bei T3 um 2,9 °C, in vier von fünf Fällen unmittelbar nach einer Abtauung, weil
+    der Frischluftfühler im stehenden Luftstrom kurzzeitig wärmer wird. Die Bedeutung beider
+    Datenpunkte stammt von Martin Kneppe (FWT 2-R); an der P 2H-L stützt sie sich auf die
+    Übereinstimmung der Schwellen, nicht auf eine Änderung der Werte.
+
 ## PTC-Modul (Knoten 30)
 
 | DP | Typ | Bedeutung |
 |---|---|---|
-| `0x0191` | int16 | vom Panel zyklisch geschrieben: **0** = Normalbetrieb, **1** = Wärmeelemente freigegeben, `0xdc00` solange das Service-Menü geöffnet ist |
+| `0x0191` | int16 | vom Panel zyklisch geschrieben: **0** in Eco-Sommer und Eco-Winter, **1** in Ofen und Komfort, `0xdc00` solange das Service-Menü geöffnet ist |
 
 Die Werte wurden in Mitschnitten mit angeschlossenem Panel beobachtet (Betriebsarten-Test
-und Service-Menü). Ein Mitschnitt einer FWT 2-R zeigt dasselbe Muster: das Panel schreibt
+und Service-Menü). Im Betriebsarten-Test wurde die Panel-Frage „Wärmeelemente freigeben“
+in allen drei Heizbetriebsarten bejaht; in Eco-Winter blieb `0x0191` dennoch 0. Der Wert
+folgt damit der Betriebsart, nicht der Antwort auf diese Frage. Ein Abgleich mit dem
+Schaltzustand „PTC-Wohnen“ steht aus. Ein Mitschnitt einer FWT 2-R zeigt dasselbe Muster: das Panel schreibt
 `0x0191` an Knoten 30 etwa alle 11 Sekunden. Ohne Panel schreibt diesen Datenpunkt
 niemand; ob das PTC-Modul die Wärmeelemente dann jemals freigibt, ist offen.
 
